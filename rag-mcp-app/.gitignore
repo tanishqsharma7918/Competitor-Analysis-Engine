@@ -1,0 +1,16 @@
+# Vector Store Index
+faiss_rag_index/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment folders
+.env
+.venv
+env/
+venv/
+.conda
+
+# System files
+.DS_Store
