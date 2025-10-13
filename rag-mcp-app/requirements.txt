@@ -1,0 +1,8 @@
+streamlit
+langchain
+langgraph
+langchain-openai
+langchain-community
+faiss-cpu
+wikipedia-api
+openai
