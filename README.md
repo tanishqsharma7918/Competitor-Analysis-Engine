@@ -7,7 +7,16 @@ The Competitor Analysis Engine is an intelligent, fully automated system that an
 
 Perfect for portfolios, interviews, product strategy explorations, and real-world competitive benchmarking.
 
+Live URL :
+
 ---
+
+### **🎥 DEMO**
+
+
+
+---
+
 
 ### ✨ Key Features
 
