@@ -1,0 +1,54 @@
+.stButton>button {
+    background-color: #366092;
+    color: white;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.stButton>button:hover {
+    background-color: #2a4a6f;
+}
+
+.main-header {
+    text-align: center;
+    padding: 1rem 0;
+    margin-bottom: 2rem;
+}
+
+.feature-matrix {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.differentiator-card {
+    background-color: #f0f2f6;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.recommendation-card {
+    background-color: #e8f4f8;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.missing-capability-card {
+    background-color: #fff4e6;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.agent-log {
+    background-color: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    max-height: 400px;
+    overflow-y: auto;
+}

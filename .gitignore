@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Replit & virtual environment
+.pythonlibs/
+.venv/
+venv/
+.env/
+.envrc
+*.env
+
+# Streamlit
+.streamlit/secrets.toml
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+
+# Logs
+*.log
+
+# Cache
+.cache/

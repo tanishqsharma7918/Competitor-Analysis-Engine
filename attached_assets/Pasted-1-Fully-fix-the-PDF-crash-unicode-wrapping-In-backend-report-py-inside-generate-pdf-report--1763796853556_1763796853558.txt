@@ -1,0 +1,143 @@
+1. Fully fix the PDF crash (unicode + wrapping)
+
+In backend/report.py, inside generate_pdf_report():
+
+A. Add this helper function at the TOP of the function:
+def clean(text: str) -> str:
+    if not isinstance(text, str):
+        text = str(text)
+    # Remove all characters FPDF cannot render (non-latin-1)
+    return ''.join(c for c in text if ord(c) < 128)
+
+B. Wrap ALL text passed to pdf.cell() and pdf.multi_cell()
+
+Example changes:
+
+Replace:
+
+pdf.multi_cell(0, 6, f"{i}. {diff.get('title', '')}")
+
+
+With:
+
+pdf.multi_cell(0, 6, clean(f"{i}. {diff.get('title', '')}"))
+
+
+Do this for:
+
+competitor names
+
+competitor descriptions
+
+differentiators
+
+recommendations
+
+missing capabilities
+
+feature list
+
+executive summary
+
+product name
+
+ANY other content coming from LLM or user input
+
+This prevents:
+
+❌ emojis
+❌ curly quotes
+❌ unicode bullets
+❌ en-dashes
+❌ smart quotes
+❌ symbols outside Latin-1
+
+that cause:
+
+“Not enough horizontal space to render a single character”
+
+and guarantees PDF generation never crashes again.
+
+C. Ensure the final return stays:
+return pdf.output(dest="S").encode("latin-1")
+
+2. Disable Postgres usage completely to remove SSL errors
+
+The current logs show:
+
+psycopg2.OperationalError: SSL connection has been closed unexpectedly
+
+
+You said you don’t want database caching at all — so remove it.
+
+Make the following changes:
+
+A. In backend/database.py:
+
+Disable all DB engine creation
+
+Disable SessionLocal
+
+Comment out all SQLAlchemy logic
+
+Replace with no-ops or simple placeholder functions
+
+B. In backend/cache.py:
+
+Replace all functions like:
+
+get_competitor_cache(...)
+set_competitor_cache(...)
+get_feature_cache(...)
+set_feature_cache(...)
+
+
+With simple no-op stubs:
+
+def get_competitor_cache(*args, **kwargs):
+    return None
+
+def set_competitor_cache(*args, **kwargs):
+    return None
+
+def get_feature_cache(*args, **kwargs):
+    return None
+
+def set_feature_cache(*args, **kwargs):
+    return None
+
+
+No database calls should be made.
+
+C. In app.py:
+
+Remove or comment out:
+
+from backend.cache import ...
+
+
+And ALL calls to:
+
+get_competitor_cache
+set_competitor_cache
+get_feature_cache
+set_feature_cache
+
+
+So the app never touches Postgres and no background SSL errors appear.
+
+D. Remove database initializations
+
+Delete or comment out imports from:
+
+backend.database
+
+sqlalchemy
+
+psycopg2
+
+Your app should run entirely in memory.
+
+3. Restart the Streamlit app
+
+After making these changes, restart Replit.
