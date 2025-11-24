@@ -1,27 +1,40 @@
 from typing import List, Dict, Any
 import streamlit as st
-from backend.llm import AgentLogger
+import asyncio
+
+from backend.llm import call_openai_json_async, AgentLogger
 from backend.cache import get_cached_features, cache_features
 
 
+# ---------------------------------------------------------
+# Stable Cache Key Helper
+# ---------------------------------------------------------
+def _feature_cache_key(product_name: str, description: str, competitor_names: List[str]) -> str:
+    """
+    Stable cache key that does NOT depend on LLM-generated competitor descriptions.
+    """
+    competitors_joined = "|".join(sorted([c.lower().strip() for c in competitor_names]))
+    return f"{product_name.strip().lower()}|{description.strip().lower()}|{competitors_joined}"
 
+
+# ---------------------------------------------------------
+# Streamlit Cache Wrapper (sync wrapper for async LLM call)
+# ---------------------------------------------------------
 @st.cache_data(show_spinner=False)
-def cached_llm_feature_extraction(messages_tuple):
+def _cached_llm_feature_call(messages_tuple: tuple) -> Dict[str, Any]:
     """
-    Cached wrapper for OpenAI JSON call.
-    Streamlit requires hashable inputs → we pass a tuple.
+    Streamlit requires cache functions to be sync.
+    So we run the async LLM call inside asyncio.run().
     """
-    from backend.llm import call_openai_json  # local import avoids hashing issues
-    messages = [{"role": role, "content": content} for role, content in messages_tuple]
-    return call_openai_json(messages)
-
+    messages = [{"role": r, "content": c} for r, c in messages_tuple]
+    result = asyncio.run(call_openai_json_async(messages, model="gpt-4o-mini"))
+    return result
 
 
 # ---------------------------------------------------------
-# MAIN FEATURE EXTRACTION FUNCTION
+# ASYNC FEATURE EXTRACTION
 # ---------------------------------------------------------
-
-def extract_features(
+async def extract_features(
     product_name: str,
     competitors: List[Dict[str, Any]],
     description: str = "",
@@ -29,120 +42,107 @@ def extract_features(
     use_cache: bool = True
 ) -> Dict[str, Any]:
 
-    # -----------------------------------------------------
-    # 1. Check custom cache first
-    # -----------------------------------------------------
+    # ------------------------------------------
+    # 1. Build stable cache key
+    # ------------------------------------------
+    competitor_names = [c.get("product_name", "") for c in competitors]
+    cache_key = _feature_cache_key(product_name, description, competitor_names)
+
+    # ------------------------------------------
+    # 2. Check local (persistent) cache
+    # ------------------------------------------
     if use_cache:
-        cached_result = get_cached_features(product_name)
-        if cached_result:
+        cached = get_cached_features(product_name)
+        if cached:
             if logger:
-                logger.log_thought(f"Found cached feature data for: {product_name}")
-                logger.log_observation(
-                    f"Using cached results ({len(cached_result['features'])} features) - saved API call!"
-                )
-            return cached_result
+                logger.log_thought(f"[CACHE HIT] Features for '{product_name}' loaded instantly.")
+                logger.log_observation(f"{len(cached['features'])} features pulled from cache.")
+            return cached
 
-    # -----------------------------------------------------
-    # 2. Logging start
-    # -----------------------------------------------------
+    # ------------------------------------------
+    # 3. Prepare LLM prompt
+    # ------------------------------------------
     if logger:
-        logger.log_thought("Extracting features from all products and competitors")
-        logger.log_action(f"Analyzing features for {product_name} and {len(competitors)} competitors")
+        logger.log_thought("Extracting features via LLM...")
+        logger.log_action(f"Analyzing product: {product_name} and {len(competitors)} competitors.")
 
-    # -----------------------------------------------------
-    # 3. Build competitor list block
-    # -----------------------------------------------------
-    competitor_list = "\n".join([
-        f"- {c.get('company_name', 'Unknown')}: {c.get('product_name', 'Unknown')} - {c.get('description', '')}"
-        for c in competitors
-    ])
+    competitor_list = "\n".join(
+        [
+            f"- {c.get('company_name', 'Unknown')}: {c.get('product_name', 'Unknown')} - {c.get('description', '')}"
+            for c in competitors
+        ]
+    )
 
-    # -----------------------------------------------------
-    # 4. Build LLM prompt
-    # -----------------------------------------------------
-    prompt = f"""You are a product analyst expert. Analyze the following product and its competitors, then extract a comprehensive list of key features.
+    prompt = f"""
+You are a senior product analyst. Read the following:
 
 Main Product: {product_name}
-{f'Description: {description}' if description else ''}
+Description: {description}
 
 Competitors:
 {competitor_list}
 
-Your task:
-1. Identify 7 key features that are important for comparison across all these products
-2. For each feature, determine which products have it
+Your tasks:
+1. Identify EXACTLY 7 key features important for comparison across all these products.
+2. Each feature must include:
+   - feature_name
+   - description
+   - category (e.g., Core Functionality, Integrations, Pricing, Support, UX, etc.)
+3. For each product, list which features they have.
 
-Return your response as JSON in this exact format:
+Return ONLY JSON in this exact format:
 {{
     "features": [
         {{
             "feature_name": "...",
-            "description": "Brief description of the feature",
-            "category": "e.g., Core Functionality, Integration, Pricing, Support, etc."
+            "description": "...",
+            "category": "..."
         }}
     ],
     "product_features": {{
-        "{product_name}": ["feature_name_1", "feature_name_2", ...],
-        "Competitor Product 1": ["feature_name_1", ...],
+        "{product_name}": ["feature1", "feature2", ...],
+        "competitor product": ["feature1", ...],
         ...
     }}
 }}
+    """
 
-Make sure to use the exact product names as they appear in the competitor list.
-"""
+    messages = [
+        {"role": "system", "content": "You are an expert product feature analyst."},
+        {"role": "user", "content": prompt}
+    ]
 
+    messages_tuple = tuple((m["role"], m["content"]) for m in messages)
+
+    # ------------------------------------------
+    # 4. Call the cached LLM wrapper
+    # ------------------------------------------
     try:
-        # -----------------------------------------------------
-        # 5. Prepare OpenAI messages
-        # -----------------------------------------------------
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are an expert product analyst with deep knowledge of product "
-                    "features and competitive analysis."
-                ),
-            },
-            {"role": "user", "content": prompt}
-        ]
-
-        # Convert messages list to tuple (hashable for Streamlit)
-        messages_tuple = tuple((m["role"], m["content"]) for m in messages)
-
-        # -----------------------------------------------------
-        # 6. Cached LLM call
-        # -----------------------------------------------------
-        result = cached_llm_feature_extraction(messages_tuple)
-
-        # Extract fields
-        features = result.get("features", [])
-        product_features = result.get("product_features", {})
-
-        feature_data = {
-            "features": features,
-            "product_features": product_features
-        }
-
-        # -----------------------------------------------------
-        # 7. Store in custom cache
-        # -----------------------------------------------------
-        if use_cache:
-            cache_features(product_name, features, product_features)
-
-        # -----------------------------------------------------
-        # 8. Logging success
-        # -----------------------------------------------------
-        if logger:
-            logger.log_observation(
-                f"Successfully extracted {len(features)} key features (cached for future use)"
-            )
-            logger.log_observation(
-                f"Analyzed feature coverage for {len(product_features)} products"
-            )
-
-        return feature_data
+        json_str = _cached_llm_feature_call(messages_tuple)
+        features = json_str.get("features", [])
+        product_features = json_str.get("product_features", {})
 
     except Exception as e:
         if logger:
-            logger.log_observation(f"Error during feature extraction: {str(e)}")
-        raise Exception(f"Failed to extract features: {str(e)}")
+            logger.log_observation(f"ERROR during feature extraction: {str(e)}")
+        raise Exception(f"Feature extraction failed: {str(e)}")
+
+    feature_data = {
+        "features": features,
+        "product_features": product_features,
+    }
+
+    # ------------------------------------------
+    # 5. Save to local persistent cache
+    # ------------------------------------------
+    if use_cache:
+        cache_features(product_name, features, product_features)
+
+    # ------------------------------------------
+    # 6. Logging
+    # ------------------------------------------
+    if logger:
+        logger.log_observation(f"{len(features)} features extracted.")
+        logger.log_observation(f"Feature coverage computed for {len(product_features)} products.")
+
+    return feature_data
