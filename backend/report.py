@@ -3,119 +3,112 @@ import pandas as pd
 from typing import Dict, Any, List
 import io
 from openpyxl import Workbook
-from pptx import Presentation
-from pptx.util import Inches, Pt
-from fpdf import FPDF
+from openpyxl.styles import Font, Alignment
 
 
-# ---------------------------------------------------------
-# STABLE CACHE KEY BUILDER
-# ---------------------------------------------------------
-def _report_cache_key(product_name: str) -> str:
-    return product_name.strip().lower()
-
-
-# ---------------------------------------------------------
-# EXCEL REPORT (CACHED)
-# ---------------------------------------------------------
 @st.cache_data(show_spinner=False)
-def generate_excel_report(product_name: str, df: pd.DataFrame) -> bytes:
+def generate_excel_report(
+    product_name: str,
+    matrix_df: pd.DataFrame,
+    competitors: List[Dict[str, Any]],
+    features: List[Dict[str, Any]],
+    product_features: Dict[str, List[str]],
+    analysis: Dict[str, Any]
+) -> bytes:
     """
-    Creates Excel report and caches the result.
+    FULL detailed Excel export with 5 worksheets:
+    Overview, Competitors, Features, Matrix, Analysis
     """
 
     wb = Workbook()
+
+    # ---------------------------------------------------
+    # 1️⃣ Sheet: Overview
+    # ---------------------------------------------------
     ws = wb.active
-    ws.title = "Comparison Matrix"
+    ws.title = "Overview"
 
-    # Write header
-    ws.append(["Product"] + list(df.columns))
+    ws["A1"] = f"Competitor Analysis Report — {product_name}"
+    ws["A1"].font = Font(size=16, bold=True)
 
-    # Write rows
-    for product, row in df.iterrows():
-        ws.append([product] + list(row.values))
+    ws.append(["Product Name", product_name])
+    ws.append(["Total Competitors", len(competitors)])
+    ws.append(["Total Features", len(features)])
 
-    # Save to bytes
+    ws.append([])
+
+    # Differentiators summary
+    ws.append(["Key Differentiators"])
+    diffs = analysis.get("differentiators", [])
+    for d in diffs:
+        ws.append([f"- {d.get('title')}: {d.get('description')}"])
+
+    ws.append([])
+
+    # Recommendations summary
+    ws.append(["Recommendations"])
+    recs = analysis.get("recommendations", [])
+    for r in recs:
+        ws.append([f"- {r.get('title')}: {r.get('description')}"])
+
+    # ---------------------------------------------------
+    # 2️⃣ Competitors Sheet
+    # ---------------------------------------------------
+    ws2 = wb.create_sheet("Competitors")
+    ws2.append(["Company Name", "Product", "Description", "Website", "Market Position"])
+
+    for c in competitors:
+        ws2.append([
+            c.get("company_name", ""),
+            c.get("product_name", ""),
+            c.get("description", ""),
+            c.get("website", ""),
+            c.get("market_position", "")
+        ])
+
+    # ---------------------------------------------------
+    # 3️⃣ Features Sheet
+    # ---------------------------------------------------
+    ws3 = wb.create_sheet("Features")
+    ws3.append(["Feature Name", "Category", "Description"])
+
+    for f in features:
+        ws3.append([
+            f.get("feature_name", ""),
+            f.get("category", ""),
+            f.get("description", "")
+        ])
+
+    # ---------------------------------------------------
+    # 4️⃣ Matrix Sheet
+    # ---------------------------------------------------
+    ws4 = wb.create_sheet("Feature Matrix")
+    ws4.append(["Product"] + list(matrix_df.columns))
+
+    for product, row in matrix_df.iterrows():
+        ws4.append([product] + list(row.values))
+
+    # ---------------------------------------------------
+    # 5️⃣ Analysis Sheet
+    # ---------------------------------------------------
+    ws5 = wb.create_sheet("Analysis")
+    ws5.append(["Differentiators"])
+    for d in analysis.get("differentiators", []):
+        ws5.append([d.get("title"), d.get("description")])
+
+    ws5.append([])
+    ws5.append(["Gaps"])
+    for g in analysis.get("gaps", []):
+        ws5.append([g.get("title"), g.get("description")])
+
+    ws5.append([])
+    ws5.append(["Recommendations"])
+    for r in analysis.get("recommendations", []):
+        ws5.append([r.get("title"), r.get("description")])
+
+    # ---------------------------------------------------
+    # Return Excel bytes
+    # ---------------------------------------------------
     buffer = io.BytesIO()
     wb.save(buffer)
-    return buffer.getvalue()
-
-
-# ---------------------------------------------------------
-# POWERPOINT REPORT (CACHED)
-# ---------------------------------------------------------
-@st.cache_data(show_spinner=False)
-def generate_powerpoint_report(product_name: str, df: pd.DataFrame) -> bytes:
-    """
-    Creates PPT report and caches output.
-    """
-
-    prs = Presentation()
-    title_slide_layout = prs.slide_layouts[0]
-    slide = prs.slides.add_slide(title_slide_layout)
-
-    title = slide.shapes.title
-    subtitle = slide.placeholders[1]
-
-    title.text = f"Competitor Analysis — {product_name}"
-    subtitle.text = "Auto-generated Report"
-
-    # Add table slide
-    slide_layout = prs.slide_layouts[5]
-    table_slide = prs.slides.add_slide(slide_layout)
-
-    rows = df.shape[0] + 1
-    cols = df.shape[1] + 1
-
-    table = table_slide.shapes.add_table(rows, cols, Inches(0.3), Inches(1), Inches(9), Inches(5)).table
-
-    # Header
-    table.cell(0, 0).text = "Product"
-    for j, col in enumerate(df.columns, start=1):
-        table.cell(0, j).text = col
-
-    # Rows
-    for i, (product, row) in enumerate(df.iterrows(), start=1):
-        table.cell(i, 0).text = str(product)
-        for j, val in enumerate(row.values, start=1):
-            table.cell(i, j).text = str(val)
-
-    # Save to bytes
-    buffer = io.BytesIO()
-    prs.save(buffer)
-    return buffer.getvalue()
-
-
-# ---------------------------------------------------------
-# PDF REPORT (CACHED)
-# ---------------------------------------------------------
-@st.cache_data(show_spinner=False)
-def generate_pdf_report(product_name: str, df: pd.DataFrame) -> bytes:
-    """
-    Generates PDF report with caching for speed.
-    """
-
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=14)
-    pdf.cell(0, 10, f"Competitor Analysis — {product_name}", ln=True)
-
-    pdf.set_font("Arial", size=10)
-
-    # Table header
-    header = ["Product"] + list(df.columns)
-    for h in header:
-        pdf.cell(40, 10, h, 1)
-    pdf.ln()
-
-    # Table rows
-    for product, row in df.iterrows():
-        pdf.cell(40, 10, str(product), 1)
-        for val in row.values:
-            pdf.cell(40, 10, str(val), 1)
-        pdf.ln()
-
-    # Save to bytes
-    buffer = io.BytesIO()
-    buffer.write(pdf.output(dest="S").encode("latin-1"))
     return buffer.getvalue()
