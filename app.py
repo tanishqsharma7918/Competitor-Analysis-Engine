@@ -452,7 +452,8 @@ if st.session_state.analysis_complete and st.session_state.results:
             ppt_data = generate_powerpoint_report(
                 results['product_name'],
                 results['matrix_df'],
-                results['analysis']
+                results['analysis'],
+                results['features']
             )
             st.download_button(
                 "📽️ PowerPoint Report",
