@@ -430,7 +430,11 @@ if st.session_state.analysis_complete and st.session_state.results:
         try:
             excel_data = generate_excel_report(
                 results['product_name'],
-                results['matrix_df']
+                results['matrix_df'],
+                results['competitors'],
+                results['features'],
+                results['product_features'],
+                results['analysis']
             )
             st.download_button(
                 "📊 Excel Report",
@@ -447,7 +451,9 @@ if st.session_state.analysis_complete and st.session_state.results:
         try:
             ppt_data = generate_powerpoint_report(
                 results['product_name'],
-                results['matrix_df']
+                results['matrix_df'],
+                results['analysis'],
+                results['features']
             )
             st.download_button(
                 "📽️ PowerPoint Report",
