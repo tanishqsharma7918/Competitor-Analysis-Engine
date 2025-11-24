@@ -1,21 +1,22 @@
 import os
+import json
 import asyncio
 from typing import Dict, List, Any
 from openai import OpenAI
 
-# Load API Key
+# Load API key
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-# Sync OpenAI Client (we will wrap in async)
+# OpenAI client
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 # --------------------------------------------------------
-# LOW-LEVEL RAW COMPLETION CALL (SYNC)
+# RAW COMPLETION (STRING OUTPUT)
 # --------------------------------------------------------
 def call_openai(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> str:
     """
-    Standard OpenAI chat completion. Returns string output.
+    Standard chat completion returning pure text.
     """
     response = client.chat.completions.create(
         model=model,
@@ -27,11 +28,12 @@ def call_openai(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> s
 
 
 # --------------------------------------------------------
-# SYNC — JSON RETURNING VERSION
+# JSON COMPLETION (RETURNS PYTHON DICT)
 # --------------------------------------------------------
 def call_openai_json(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> Dict[str, Any]:
     """
-    Returns JSON output. MUCH safer for structured tasks.
+    Returns JSON output parsed into a Python dict.
+    Fixes: strings → dict to avoid .get() errors.
     """
     response = client.chat.completions.create(
         model=model,
@@ -40,29 +42,34 @@ def call_openai_json(messages: List[Dict[str, str]], model: str = "gpt-4o-mini")
         max_tokens=4000,
         response_format={"type": "json_object"}
     )
-    return response.choices[0].message.content  # JSON string
+
+    raw = response.choices[0].message.content  # string
+    try:
+        data = json.loads(raw)                 # parse into dict
+        return data
+    except json.JSONDecodeError:
+        raise ValueError(f"OpenAI returned invalid JSON:\n\n{raw}")
 
 
 # --------------------------------------------------------
-# ASYNC WRAPPERS — Thread Offloading
+# ASYNC VERSIONS (SAFE VIA THREAD OFFLOADING)
 # --------------------------------------------------------
 async def call_openai_async(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> str:
-    """Async version of call_openai using thread offloading."""
+    """Async version of call_openai using threads."""
     return await asyncio.to_thread(call_openai, messages, model)
 
 
 async def call_openai_json_async(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> Dict[str, Any]:
-    """Async version of call_openai_json using thread offloading."""
+    """Async version of call_openai_json using threads."""
     return await asyncio.to_thread(call_openai_json, messages, model)
 
 
 # --------------------------------------------------------
-# FIXED LOGGER CLASS (NOW RETURNS STRUCTURED LOGS)
+# LOGGER CLASS (STRUCTURED LOGS FOR UI)
 # --------------------------------------------------------
 class AgentLogger:
     """
-    Stores structured logs that your app.py and format_log_entry()
-    can safely read without crashing.
+    Stores structured logs compatible with helpers.format_log_entry().
     """
     def __init__(self):
         self.logs = []
