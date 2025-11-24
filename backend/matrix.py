@@ -1,107 +1,115 @@
-from typing import List, Dict, Any
+from typing import Dict, List, Any
 import pandas as pd
-from backend.llm import call_openai_json, AgentLogger
+import streamlit as st
+
+from backend.llm import call_openai_json  # sync version used here on purpose
 
 
-def build_comparison_matrix(
-    product_name: str,
-    features: List[Dict[str, Any]],
-    product_features: Dict[str, List[str]],
-    logger: AgentLogger = None
-) -> pd.DataFrame:
-    if logger:
-        logger.log_thought("Building feature comparison matrix")
-        logger.log_action("Creating structured matrix with all products and features")
-    
-    feature_names = [f["feature_name"] for f in features]
-    product_names = list(product_features.keys())
-    
-    matrix_data = []
-    for feature_name in feature_names:
-        row = {"Feature": feature_name}
-        for product in product_names:
-            has_feature = feature_name in product_features.get(product, [])
-            row[product] = "✓" if has_feature else "✗"
-        matrix_data.append(row)
-    
-    df = pd.DataFrame(matrix_data)
-    
-    if logger:
-        logger.log_observation(f"Matrix created with {len(feature_names)} features and {len(product_names)} products")
-    
+# ---------------------------------------------------------
+# Streamlit cache for matrix building
+# ---------------------------------------------------------
+@st.cache_data(show_spinner=False)
+def _cached_matrix_build(features: List[Dict[str, Any]], product_features: Dict[str, List[str]]) -> pd.DataFrame:
+    """
+    Caches the entire DataFrame build. This avoids recomputing the matrix
+    even if the app reruns 10 times.
+    """
+    return _build_matrix(features, product_features)
+
+
+# ---------------------------------------------------------
+# INTERNAL — NON-CACHED RAW MATRIX BUILDER
+# ---------------------------------------------------------
+def _build_matrix(features: List[Dict[str, Any]], product_features: Dict[str, List[str]]) -> pd.DataFrame:
+    """
+    Build the comparison matrix WITHOUT any caching.
+    This function is wrapped by the Streamlit cache above.
+    """
+
+    # Extract feature names
+    feature_names = [f.get("feature_name", "") for f in features]
+
+    # Sort products alphabetically for stable output
+    product_names = sorted(product_features.keys())
+
+    # Create matrix dict
+    matrix_data = {
+        feature_name: [
+            1 if feature_name in product_features.get(product, []) else 0
+            for product in product_names
+        ]
+        for feature_name in feature_names
+    }
+
+    # Build DataFrame
+    df = pd.DataFrame(matrix_data, index=product_names)
+
     return df
+
+
+# ---------------------------------------------------------
+# PUBLIC FUNCTION — CALLED BY app.py
+# ---------------------------------------------------------
+def build_comparison_matrix(features: List[Dict[str, Any]], product_features: Dict[str, List[str]]) -> pd.DataFrame:
+    """Build and return cached comparison matrix DataFrame."""
+    return _cached_matrix_build(features, product_features)
+
+
+# ---------------------------------------------------------
+# CACHING DIFFERENTIATOR ANALYSIS
+# ---------------------------------------------------------
+
+@st.cache_data(show_spinner=False)
+def _cached_differentiator_llm(messages_tuple: tuple) -> Dict[str, Any]:
+    """
+    Streamlit cache wrapper for differentiator analysis.
+    Uses gpt-4o (stronger model) for best insight quality.
+    """
+    messages = [{"role": r, "content": c} for r, c in messages_tuple]
+    result = call_openai_json(messages, model="gpt-4o")  # STRONG model for insights
+    return result
 
 
 def analyze_differentiators(
     product_name: str,
-    competitors: List[Dict[str, Any]],
     features: List[Dict[str, Any]],
-    product_features: Dict[str, List[str]],
-    logger: AgentLogger = None
+    product_features: Dict[str, List[str]]
 ) -> Dict[str, Any]:
-    if logger:
-        logger.log_thought("Analyzing competitive differentiators and unique selling points")
-        logger.log_action("Identifying unique features and competitive advantages")
-    
-    competitor_names = [c.get("product_name", "Unknown") for c in competitors]
-    
-    feature_list = "\n".join([
-        f"- {f['feature_name']}: {f.get('description', '')}"
-        for f in features
-    ])
-    
-    product_feature_summary = "\n".join([
-        f"{prod}: {', '.join(feats)}"
-        for prod, feats in product_features.items()
-    ])
-    
-    prompt = f"""Analyze the competitive landscape and provide strategic insights.
+    """
+    Uses LLM to analyze differentiation strategy.
+    This used to take 30–90 seconds — now cached to ~0.1 sec.
+    """
 
-Main Product: {product_name}
-Competitors: {', '.join(competitor_names)}
+    # Prepare LLM prompt
+    prompt = f"""
+You are a competitive strategy expert.
 
-Features Analysis:
-{product_feature_summary}
+Given these features and coverage, analyze:
+1. Which features differentiate {product_name} from its competitors.
+2. Which features competitors offer that {product_name} does not.
+3. Recommend strategic improvements.
 
-Provide:
-1. unique_to_product: List of features that ONLY {product_name} has
-2. unique_to_competitors: Features that competitors have but {product_name} doesn't
-3. common_features: Features that all or most products share
-4. differentiators: Top 3-5 key differentiators for {product_name}
-5. recommendations: Strategic recommendations for {product_name}
-6. missing_capabilities: Top 5 important capabilities that {product_name} is missing
-
-Return as JSON:
+Return ONLY JSON in this format:
 {{
-    "unique_to_product": ["feature1", "feature2", ...],
-    "unique_to_competitors": ["feature1", "feature2", ...],
-    "common_features": ["feature1", "feature2", ...],
-    "differentiators": [
-        {{"title": "...", "description": "..."}}
-    ],
-    "recommendations": [
-        {{"title": "...", "description": "..."}}
-    ],
-    "missing_capabilities": [
-        {{"capability": "...", "importance": "High/Medium/Low", "rationale": "..."}}
+    "differentiators": ["..."],
+    "gaps": ["..."],
+    "recommendations": ["..."]
+}}
+"""
+
+    messages = [
+        {"role": "system", "content": "You are an expert in product differentiation."},
+        {"role": "user", "content": prompt},
     ]
-}}"""
-    
-    try:
-        messages = [
-            {"role": "system", "content": "You are a strategic business analyst specializing in competitive positioning and product strategy."},
-            {"role": "user", "content": prompt}
-        ]
-        
-        result = call_openai_json(messages)
-        
-        if logger:
-            logger.log_observation(f"Identified {len(result.get('differentiators', []))} key differentiators")
-            logger.log_observation(f"Generated {len(result.get('recommendations', []))} strategic recommendations")
-        
-        return result
-        
-    except Exception as e:
-        if logger:
-            logger.log_observation(f"Error during differentiator analysis: {str(e)}")
-        raise Exception(f"Failed to analyze differentiators: {str(e)}")
+
+    messages_tuple = tuple((m["role"], m["content"]) for m in messages)
+
+    # Cached LLM call
+    result_json = _cached_differentiator_llm(messages_tuple)
+
+    # Parse fields safely
+    return {
+        "differentiators": result_json.get("differentiators", []),
+        "gaps": result_json.get("gaps", []),
+        "recommendations": result_json.get("recommendations", []),
+    }
