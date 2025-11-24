@@ -1,53 +1,61 @@
 import os
-import json
+import asyncio
+from typing import Dict, List, Any
 from openai import OpenAI
-from typing import List, Dict, Any
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+# Load API Key
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+# Sync OpenAI Client (we will wrap in async)
 client = OpenAI(api_key=OPENAI_API_KEY)
 
 
-class AgentLogger:
-    def __init__(self):
-        self.logs = []
-    
-    def log_thought(self, thought: str):
-        self.logs.append({"type": "thought", "content": thought})
-    
-    def log_action(self, action: str, details: str = ""):
-        self.logs.append({"type": "action", "content": action, "details": details})
-    
-    def log_observation(self, observation: str):
-        self.logs.append({"type": "observation", "content": observation})
-    
-    def get_logs(self) -> List[Dict[str, str]]:
-        return self.logs
+# --------------------------------------------------------
+# LOW-LEVEL RAW COMPLETION CALL (SYNC)
+# --------------------------------------------------------
+def call_openai(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> str:
+    """
+    Standard OpenAI chat completion. Returns string output.
+    By default uses gpt-4o-mini for FAST performance.
+    """
+    response = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=0,
+        max_tokens=3000
+    )
+    return response.choices[0].message.content
 
 
-def call_openai(messages: List[Dict[str, str]], response_format: str = "text", model: str = "gpt-5") -> str:
-    try:
-        if response_format == "json":
-            response = client.chat.completions.create(
-                model=model,
-                messages=messages,
-                response_format={"type": "json_object"},
-            )
-        else:
-            response = client.chat.completions.create(
-                model=model,
-                messages=messages,
-            )
-        return response.choices[0].message.content
-    except Exception as e:
-        raise Exception(f"OpenAI API call failed: {str(e)}")
+# --------------------------------------------------------
+# SYNC — JSON RETURNING VERSION
+# --------------------------------------------------------
+def call_openai_json(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> Dict[str, Any]:
+    """
+    Returns JSON output. MUCH safer for structured tasks.
+    """
+    response = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=0,
+        max_tokens=4000,
+        response_format={"type": "json_object"}
+    )
+    return response.choices[0].message.content  # This is already JSON string
 
 
-def call_openai_json(messages: List[Dict[str, str]], model: str = "gpt-5") -> Dict[str, Any]:
-    try:
-        result = call_openai(messages, response_format="json", model=model)
-        return json.loads(result)
-    except json.JSONDecodeError as e:
-        raise Exception(f"Failed to parse JSON response: {str(e)}")
-    except Exception as e:
-        raise e
+# --------------------------------------------------------
+# ASYNC WRAPPERS — Thread Offloading
+# --------------------------------------------------------
+async def call_openai_async(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> str:
+    """
+    Async version of call_openai using thread-based offloading.
+    """
+    return await asyncio.to_thread(call_openai, messages, model)
+
+
+async def call_openai_json_async(messages: List[Dict[str, str]], model: str = "gpt-4o-mini") -> Dict[str, Any]:
+    """
+    Async version of call_openai_json using thread-based offloading.
+    """
+    return await asyncio.to_thread(call_openai_json, messages, model)
