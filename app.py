@@ -2,6 +2,9 @@ import streamlit as st
 import os
 import pandas as pd
 import asyncio
+import nest_asyncio
+
+nest_asyncio.apply()
 
 # Backend imports (ASYNC + optimized backend)
 from backend.llm import AgentLogger
@@ -29,8 +32,8 @@ from utils.helpers import validate_product_name, sanitize_input, format_log_entr
 # -------------------------------------------------------
 def run_async(coro):
     """
-    Runs async coroutines inside Streamlit safely.
-    Avoids 'RuntimeError: Event loop is running'.
+    Safely run async coroutines inside Streamlit.
+    NEVER uses asyncio.run() (which crashes Streamlit).
     """
     try:
         loop = asyncio.get_event_loop()
@@ -38,11 +41,8 @@ def run_async(coro):
         loop = asyncio.new_event_loop()
         asyncio.set_event_loop(loop)
 
-    if loop.is_running():
-        # In case Streamlit runs its own loop
-        return asyncio.run(coro)
-    else:
-        return loop.run_until_complete(coro)
+    # Always use run_until_complete
+    return loop.run_until_complete(coro)
 
 
 # -------------------------------------------------------
