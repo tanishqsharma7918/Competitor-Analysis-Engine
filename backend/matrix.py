@@ -55,16 +55,49 @@ def analyze_differentiators(
     product_features: Dict[str, List[str]]
 ) -> Dict[str, Any]:
 
-    # Prepare LLM prompt
+    # ----------------------------------------------
+    # 1. REAL missing capability calculation
+    # ----------------------------------------------
+    all_feature_names = [f["feature_name"] for f in features]
+
+    your_features = set(product_features.get(product_name, []))
+    all_features_set = set(all_feature_names)
+
+    missing = sorted(list(all_features_set - your_features))
+
+    missing_capability_objects = [
+        {
+            "title": feat,
+            "description": f"{product_name} does not currently offer '{feat}', which competitors use to deliver value.",
+            "importance": "Medium"  # placeholder (LLM upgrades below)
+        }
+        for feat in missing
+    ]
+
+    # ----------------------------------------------
+    # 2. Ask LLM to evaluate differentiators & importance
+    # ----------------------------------------------
     prompt = f"""
 You are a competitive strategy expert.
 
-Given these features and coverage, analyze:
-1. Which features differentiate {product_name} from its competitors.
-2. Which features competitors offer that {product_name} does not.
-3. Recommend strategic improvements.
+Here is the feature set:
+{all_feature_names}
+
+Here are the features offered by {product_name}:
+{list(your_features)}
+
+Here are the features {product_name} is missing:
+{missing}
+
+Analyze:
+
+1. Key differentiators of {product_name}.
+2. Why the missing features matter.
+3. Rate each missing feature with importance: High / Medium / Low.
+4. Provide final strategic recommendations.
 
 Return ONLY JSON in EXACTLY this format:
+
 {{
     "differentiators": [
         {{
@@ -72,10 +105,11 @@ Return ONLY JSON in EXACTLY this format:
             "description": "..."
         }}
     ],
-    "gaps": [
+    "missing_capabilities": [
         {{
             "title": "...",
-            "description": "..."
+            "description": "...",
+            "importance": "High / Medium / Low"
         }}
     ],
     "recommendations": [
@@ -94,10 +128,24 @@ Return ONLY JSON in EXACTLY this format:
 
     messages_tuple = tuple((m["role"], m["content"]) for m in messages)
 
-    result_json = _cached_differentiator_llm(messages_tuple)
+    llm_json = _cached_differentiator_llm(messages_tuple)
+
+    # ----------------------------------------------
+    # 3. Combine LLM output + real missing list
+    # ----------------------------------------------
+    llm_missing = llm_json.get("missing_capabilities", [])
+
+    # Upgrade importance if LLM didn’t rate it
+    final_missing = []
+    for item in missing_capability_objects:
+        llm_item = next((m for m in llm_missing if m["title"] == item["title"]), None)
+        if llm_item:
+            final_missing.append(llm_item)
+        else:
+            final_missing.append(item)
 
     return {
-        "differentiators": result_json.get("differentiators", []),
-        "gaps": result_json.get("gaps", []),
-        "recommendations": result_json.get("recommendations", []),
+        "differentiators": llm_json.get("differentiators", []),
+        "missing_capabilities": final_missing,
+        "recommendations": llm_json.get("recommendations", [])
     }
