@@ -234,9 +234,9 @@ section.main > div {
     border: 1px solid rgba(255, 255, 255, 0.6);
     margin-bottom: 48px;
     position: relative;
-    max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 650px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 .glass-container::before {
@@ -296,7 +296,7 @@ section.main > div {
     margin: 0 !important;
     flex: 1 1 0px;
     min-width: 0;
-    max-width: calc(50% - 12px) !important;
+    max-width: 48% !important;
 }
 
 .glass-container [data-testid="stHorizontalBlock"] {
@@ -308,7 +308,7 @@ section.main > div {
 .glass-container [data-testid="stHorizontalBlock"] > div {
     flex: 1 1 0px;
     min-width: 0;
-    max-width: calc(50% - 12px);
+    max-width: 48%;
 }
 
 .glass-container .element-container {
@@ -363,10 +363,15 @@ section.main > div {
                 0 1px 4px rgba(0, 113, 227, 0.15);
 }
 
-/* Button centering - inherits from inline flex styles */
-.glass-container .stButton {
-    width: auto !important;
-    margin: 0 !important;
+/* Button centering - full width flex center */
+.stButton {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+.stButton > button {
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 /* ============================================
