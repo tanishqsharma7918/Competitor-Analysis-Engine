@@ -204,14 +204,21 @@ section.main > div {
 .content-wrapper {
     max-width: 800px;
     margin: 0 auto !important;
-    padding: 0 40px 80px 40px !important;
+    padding: 40px 40px 80px 40px !important;
     position: relative;
+    background: transparent !important;
 }
 
 /* Ensure content-wrapper follows header immediately */
 .immersive-header + .element-container {
     margin: 0 !important;
     padding: 0 !important;
+    background: transparent !important;
+}
+
+/* Remove any auto-generated spacing/backgrounds */
+.element-container {
+    background: transparent !important;
 }
 
 /* Glassmorphic Form Container */

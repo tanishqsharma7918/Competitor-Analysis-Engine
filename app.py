@@ -127,11 +127,11 @@ st.markdown("""
     <p class='immersive-subtitle'>Discover, analyze, and benchmark your competitive landscape with AI-powered insights</p>
 </div>
 """, unsafe_allow_html=True)
-st.markdown("<div class='content-wrapper'><div class='glass-container'>", unsafe_allow_html=True)
+
 st.markdown("""
-<div class='glass-header'>
-    <h3>📝 Product Information</h3>
-    <p>Enter your product details to begin competitive analysis</p>
+<div class='content-wrapper'>
+    <h3 style='font-size: 24px; font-weight: 600; color: #1d1d1f; margin-bottom: 8px; text-align: center;'>📝 Product Information</h3>
+    <p style='font-size: 16px; color: #6e6e73; margin-bottom: 32px; text-align: center;'>Enter your product details to begin competitive analysis</p>
 </div>
 """, unsafe_allow_html=True)
 col1, col2 = st.columns(2, gap="large")
@@ -168,7 +168,7 @@ if st.session_state.analysis_complete:
         st.session_state.results = {}
         st.session_state.logger = None
         st.rerun()
-st.markdown("</div></div>", unsafe_allow_html=True)  # Close glass-container and content-wrapper
+st.markdown("</div>", unsafe_allow_html=True)  # Close content-wrapper
 
 
 # -------------------------------------------------------
