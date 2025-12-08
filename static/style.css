@@ -130,19 +130,7 @@ section.main > div {
     width: 100%;
 }
 
-/* Override any Streamlit element container that might affect button */
-.glass-container .element-container:has(.stButton) {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.glass-container [data-testid="column"]:has(.stButton) {
-    display: flex;
-    justify-content: center;
-    width: 100% !important;
-    max-width: 100% !important;
-}
+/* Button centering handled by global .stButton rule - no overrides needed */
 
 /* ============================================
    VISIONOS-INSPIRED IMMERSIVE HEADER
