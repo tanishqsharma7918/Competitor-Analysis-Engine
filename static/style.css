@@ -76,6 +76,20 @@
     z-index: 1;
 }
 
+/* Remove any default Streamlit blocks that create white boxes */
+.block-container > div,
+.block-container > .element-container {
+    background: transparent !important;
+}
+
+[data-testid="stVerticalBlock"] {
+    gap: 0 !important;
+}
+
+[data-testid="stVerticalBlock"] > div:empty {
+    display: none !important;
+}
+
 /* Force centered layout */
 section.main > div {
     max-width: 100%;
@@ -180,12 +194,24 @@ section.main > div {
 }
 
 /* Hide any Streamlit-generated containers inside content-wrapper */
-.content-wrapper > .element-container {
+.content-wrapper > .element-container,
+.content-wrapper > div > .element-container,
+.content-wrapper [data-testid="stVerticalBlock"] > div,
+.content-wrapper [data-testid="stVerticalBlock"] > .element-container {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     padding: 0 !important;
     margin: 0 !important;
+}
+
+/* Hide white box that appears before glass-container */
+.content-wrapper > div:not(.glass-container):not(.button-wrapper) {
+    display: none !important;
+}
+
+.glass-container ~ div {
+    background: transparent !important;
 }
 
 /* Glassmorphic Form Container */
@@ -330,30 +356,44 @@ section.main > div {
                 0 1px 4px rgba(0, 113, 227, 0.15);
 }
 
-/* Button wrapper for perfect centering */
-.button-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 0 auto;
+/* Button wrapper for perfect centering - Maximum specificity */
+.button-wrapper,
+.glass-container > .button-wrapper {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    text-align: center !important;
 }
 
-/* Button container centering - Force center alignment */
+/* Button container centering - Force center alignment at all levels */
 .button-wrapper .stButton,
+.button-wrapper > div,
+.button-wrapper .element-container,
 .glass-container .stButton {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    width: auto !important;
+    width: 100% !important;
     margin: 0 auto !important;
+    text-align: center !important;
 }
 
 .button-wrapper .stButton > div,
+.button-wrapper .stButton button,
 .glass-container .stButton > div {
-    display: flex;
-    justify-content: center;
-    margin: 0 auto;
+    display: flex !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+}
+
+/* Override any column behavior for buttons */
+.button-wrapper [data-testid="column"] {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
 /* ============================================
