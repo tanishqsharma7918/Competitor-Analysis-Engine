@@ -82,17 +82,22 @@ section.main > div {
     padding: 0;
 }
 
-/* Streamlit columns should respect content wrapper */
-.content-wrapper [data-testid="column"] {
-    padding: 0 12px;
+/* Streamlit column layout override */
+.glass-container [data-testid="column"] {
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
-.content-wrapper [data-testid="column"]:first-child {
-    padding-left: 0;
+/* Add gap between columns */
+.glass-container [data-testid="column"] + [data-testid="column"] {
+    margin-left: 24px !important;
 }
 
-.content-wrapper [data-testid="column"]:last-child {
-    padding-right: 0;
+/* Ensure proper flex behavior */
+.glass-container [data-testid="stHorizontalBlock"] {
+    display: flex;
+    gap: 24px;
+    width: 100%;
 }
 
 /* ============================================
@@ -101,10 +106,14 @@ section.main > div {
 .immersive-header {
     background: radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.05) 0%, transparent 60%), 
                 linear-gradient(180deg, #fafbfd 0%, #f5f7fa 100%);
-    text-align: center;
+    text-align: center !important;
     padding: 100px 48px 80px 48px;
     margin: 0 0 80px 0;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .immersive-header::after {
@@ -126,22 +135,25 @@ section.main > div {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     letter-spacing: -2px;
-    margin: 0 auto 20px auto;
+    margin: 0 auto 20px auto !important;
     line-height: 1.1;
-    text-align: center;
+    text-align: center !important;
     display: block;
+    width: 100%;
 }
 
 .immersive-subtitle {
     font-size: 21px;
-    color: #6e6e73;
+    color: #6e6e73 !important;
     font-weight: 400;
     line-height: 1.6;
     max-width: 680px;
-    margin: 0 auto;
+    margin: 0 auto !important;
+    padding: 0 20px;
     letter-spacing: -0.2px;
-    text-align: center;
+    text-align: center !important;
     display: block;
+    width: 100%;
 }
 
 /* ============================================
@@ -201,18 +213,28 @@ section.main > div {
     font-weight: 400;
 }
 
-/* Input Section Styling */
-.stTextInput,
-.stTextArea {
+/* Input Section Styling - Prevent edge-to-edge stretching */
+.glass-container .stTextInput,
+.glass-container .stTextArea {
     max-width: 100%;
+    margin-bottom: 20px;
 }
 
-/* Column containers */
-.content-wrapper [data-testid="column"] {
-    padding: 0 8px;
+/* Column containers with proper spacing */
+.glass-container [data-testid="column"] {
+    padding: 0 !important;
 }
 
-.content-wrapper .element-container {
+.glass-container [data-testid="stHorizontalBlock"] {
+    gap: 24px !important;
+}
+
+.glass-container [data-testid="stHorizontalBlock"] > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.glass-container .element-container {
     max-width: 100%;
 }
 
@@ -791,10 +813,19 @@ button[kind="header"] {
     }
     
     /* Stack columns on mobile */
-    .content-wrapper [data-testid="column"] {
+    .glass-container [data-testid="column"] {
         width: 100% !important;
         padding: 0 !important;
-        margin-bottom: 0 !important;
+        margin: 0 0 16px 0 !important;
+    }
+    
+    .glass-container [data-testid="column"] + [data-testid="column"] {
+        margin-left: 0 !important;
+    }
+    
+    .glass-container [data-testid="stHorizontalBlock"] {
+        flex-direction: column;
+        gap: 0;
     }
     
     .stButton>button {
