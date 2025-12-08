@@ -59,6 +59,21 @@ st.set_page_config(
 with open(os.path.join("static", "style.css")) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+# Center all Streamlit buttons
+st.markdown("""
+<style>
+.stButton > button {
+    display: block;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.stButton {
+    width: 100%;
+    text-align: center !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 
 # -------------------------------------------------------
 # SESSION STATE INITIALIZATION (UNCHANGED)
@@ -141,14 +156,13 @@ product_description = st.text_area(
     height=100,
     key="product_description"
 )
-# Center button - NO columns, full width with CSS centering
-st.markdown("<div style='display:flex;justify-content:center;width:100%;margin-top:32px;'>", unsafe_allow_html=True)
+
+# Centered button using CSS only
+st.markdown("<br>", unsafe_allow_html=True)
 analyze_button = st.button("🚀 Analyze Competitors", type="primary")
-st.markdown("</div>", unsafe_allow_html=True)
+
 if st.session_state.analysis_complete:
-    st.markdown("<div style='display:flex;justify-content:center;width:100%;margin-top:16px;'>", unsafe_allow_html=True)
     clear_button = st.button("🔄 Clear Results")
-    st.markdown("</div>", unsafe_allow_html=True)
     if clear_button:
         st.session_state.analysis_complete = False
         st.session_state.results = {}
