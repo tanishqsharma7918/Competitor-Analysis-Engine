@@ -331,45 +331,45 @@ if st.session_state.analysis_complete and st.session_state.results:
     for i, comp in enumerate(results['competitors'], 1):
         # Calculate market share (simulated - in real app would come from data)
         market_share = max(5, 35 - (i * 5))  # Simulated decreasing share
+        pricing_tier = "Premium" if i <= 2 else "Mid-Tier" if i <= 4 else "Budget"
+        weakness_badge = "<span class='usp-badge weakness'>⚠️ Complex UI</span>" if i > 2 else ""
+        website_link = f"<p style='margin-top: 16px;'><a href='{comp.get('website')}' target='_blank' style='color: var(--apple-blue); text-decoration: none; font-weight: 500;'>Visit Website →</a></p>" if comp.get('website') else ""
         
-        st.markdown(f"""
-        <div class='competitor-card'>
-            <div class='competitor-header'>
-                <div>
-                    <div class='competitor-name'>{comp.get('company_name', 'Unknown')}</div>
-                    <div class='competitor-product'>{comp.get('product_name', 'Unknown')}</div>
-                </div>
-                <div class='market-share-badge'>{market_share}% Market Share</div>
-            </div>
-            
-            <p style='color: var(--apple-text-secondary); font-size: 15px; line-height: 1.6; margin: 16px 0;'>
-                {comp.get('description', 'No description available')}
-            </p>
-            
-            <div class='competitor-stats'>
-                <div class='stat-item'>
-                    <div class='stat-label'>Position</div>
-                    <div class='stat-value'>{comp.get('market_position', 'Unknown')}</div>
-                </div>
-                <div class='stat-item'>
-                    <div class='stat-label'>Pricing</div>
-                    <div class='stat-value'>{"Premium" if i <= 2 else "Mid-Tier" if i <= 4 else "Budget"}</div>
-                </div>
-                <div class='stat-item'>
-                    <div class='stat-label'>Status</div>
-                    <div class='stat-value'>Active</div>
-                </div>
-            </div>
-            
-            <div class='usp-badges'>
-                <span class='usp-badge strength'>🎯 Key Strength: Feature Rich</span>
-                <span class='usp-badge'>💼 Enterprise Focus</span>
-                {"<span class='usp-badge weakness'>⚠️ Complex UI</span>" if i > 2 else ""}
-            </div>
-            
-            {f"<p style='margin-top: 16px;'><a href='{comp.get('website')}' target='_blank' style='color: var(--apple-blue); text-decoration: none; font-weight: 500;'>Visit Website →</a></p>" if comp.get('website') else ""}
+        competitor_html = f"""
+<div class='competitor-card'>
+    <div class='competitor-header'>
+        <div>
+            <div class='competitor-name'>{comp.get('company_name', 'Unknown')}</div>
+            <div class='competitor-product'>{comp.get('product_name', 'Unknown')}</div>
         </div>
-        """, unsafe_allow_html=True)
+        <div class='market-share-badge'>{market_share}% Market Share</div>
+    </div>
+    <p style='color: var(--apple-text-secondary); font-size: 15px; line-height: 1.6; margin: 16px 0;'>
+        {comp.get('description', 'No description available')}
+    </p>
+    <div class='competitor-stats'>
+        <div class='stat-item'>
+            <div class='stat-label'>Position</div>
+            <div class='stat-value'>{comp.get('market_position', 'Unknown')}</div>
+        </div>
+        <div class='stat-item'>
+            <div class='stat-label'>Pricing</div>
+            <div class='stat-value'>{pricing_tier}</div>
+        </div>
+        <div class='stat-item'>
+            <div class='stat-label'>Status</div>
+            <div class='stat-value'>Active</div>
+        </div>
+    </div>
+    <div class='usp-badges'>
+        <span class='usp-badge strength'>🎯 Key Strength: Feature Rich</span>
+        <span class='usp-badge'>💼 Enterprise Focus</span>
+        {weakness_badge}
+    </div>
+    {website_link}
+</div>
+"""
+        st.markdown(competitor_html, unsafe_allow_html=True)
 
     # ----------------------------
     # FEATURES
