@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Landscape Board - Apple Style Design Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --apple-white: #ffffff;
+            --apple-off-white: #fbfbfd;
+            --apple-light-gray: #f5f5f7;
+            --apple-gray: #e8e8ed;
+            --apple-mid-gray: #d2d2d7;
+            --apple-dark-gray: #86868b;
+            --apple-text: #1d1d1f;
+            --apple-text-secondary: #6e6e73;
+            --apple-blue: #0071e3;
+            --apple-blue-hover: #0077ed;
+            --apple-blue-light: #e8f4fd;
+            --apple-green: #30d158;
+            --apple-red: #ff3b30;
+            --apple-orange: #ff9500;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.10);
+            --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--apple-off-white);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
+            color: var(--apple-text);
+        }
+
+        .nav {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid var(--apple-gray);
+            padding: 16px 48px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-title {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--apple-text);
+            letter-spacing: -0.4px;
+        }
+
+        .nav-subtitle {
+            font-size: 14px;
+            color: var(--apple-text-secondary);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 48px 48px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 48px 0;
+            margin-bottom: 32px;
+            background: var(--apple-white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-card);
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 12px;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 19px;
+            color: var(--apple-text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin: 32px 0;
+        }
+
+        .metric-card {
+            background: var(--apple-off-white);
+            border: 1px solid var(--apple-gray);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .metric-card:hover {
+            background: var(--apple-white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .metric-value {
+            font-size: 40px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: var(--apple-text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.6px;
+            margin: 48px 0 24px 0;
+        }
+
+        .competitor-card {
+            background: var(--apple-white);
+            border: 1px solid var(--apple-gray);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .competitor-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--apple-mid-gray);
+        }
+
+        .competitor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .competitor-name {
+            font-size: 21px;
+            font-weight: 600;
+            letter-spacing: -0.4px;
+            margin-bottom: 4px;
+        }
+
+        .competitor-product {
+            font-size: 15px;
+            color: var(--apple-text-secondary);
+        }
+
+        .market-share-badge {
+            background: var(--apple-blue-light);
+            color: var(--apple-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .competitor-description {
+            color: var(--apple-text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 16px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 16px 0;
+            padding: 16px 0;
+            border-top: 1px solid var(--apple-light-gray);
+            border-bottom: 1px solid var(--apple-light-gray);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--apple-text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+
+        .usp-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .usp-badge {
+            background: var(--apple-light-gray);
+            color: var(--apple-text);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .usp-badge.strength {
+            background: rgba(48, 209, 88, 0.1);
+            color: var(--apple-green);
+        }
+
+        .usp-badge.weakness {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--apple-red);
+        }
+
+        .insight-card {
+            background: var(--apple-white);
+            border: 1px solid var(--apple-gray);
+            border-left: 4px solid var(--apple-blue);
+            padding: 24px;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+
+        .insight-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .insight-card.green {
+            border-left-color: var(--apple-green);
+        }
+
+        .insight-card.orange {
+            border-left-color: var(--apple-orange);
+        }
+
+        .insight-card strong {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .insights-summary {
+            background: linear-gradient(135deg, var(--apple-blue) 0%, #005fc5 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            margin: 32px 0;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .insights-summary h3 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .insights-summary p {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .button {
+            background: var(--apple-blue);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: -0.2px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0, 113, 227, 0.3);
+        }
+
+        .button:hover {
+            background: var(--apple-blue-hover);
+            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--apple-text-secondary);
+            font-size: 14px;
+            padding: 48px 0;
+            background: var(--apple-white);
+            border-radius: 16px;
+            margin-top: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 16px;
+            }
+            .hero h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="nav-title">Market Landscape Board</div>
+        <div class="nav-subtitle">Competitive Intelligence Platform</div>
+    </div>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Competitor Analysis</h1>
+            <p>Discover, analyze, and benchmark your competitive landscape with AI-powered insights</p>
+        </div>
+
+        <h2 class="section-title">📊 Market Overview</h2>
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-value">8</div>
+                <div class="metric-label">Competitors</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">47</div>
+                <div class="metric-label">Features Tracked</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">87%</div>
+                <div class="metric-label">Coverage Rate</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">12</div>
+                <div class="metric-label">Categories</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">🏢 Competitor Landscape</h2>
+        
+        <div class="competitor-card">
+            <div class="competitor-header">
+                <div>
+                    <div class="competitor-name">Acme Corporation</div>
+                    <div class="competitor-product">Acme Analytics Platform</div>
+                </div>
+                <div class="market-share-badge">35% Market Share</div>
+            </div>
+            
+            <p class="competitor-description">
+                Leading analytics platform with comprehensive data visualization and business intelligence capabilities. 
+                Known for enterprise-grade security and scalability.
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Position</div>
+                    <div class="stat-value">Market Leader</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Pricing</div>
+                    <div class="stat-value">Premium</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value">Active</div>
+                </div>
+            </div>
+            
+            <div class="usp-badges">
+                <span class="usp-badge strength">🎯 Key Strength: Feature Rich</span>
+                <span class="usp-badge">💼 Enterprise Focus</span>
+                <span class="usp-badge">🔒 Security First</span>
+            </div>
+        </div>
+
+        <div class="competitor-card">
+            <div class="competitor-header">
+                <div>
+                    <div class="competitor-name">TechFlow Solutions</div>
+                    <div class="competitor-product">FlowMetrics Pro</div>
+                </div>
+                <div class="market-share-badge">28% Market Share</div>
+            </div>
+            
+            <p class="competitor-description">
+                Fast-growing competitor focusing on real-time analytics and modern user experience. 
+                Popular among mid-market companies and startups.
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Position</div>
+                    <div class="stat-value">Rising Star</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Pricing</div>
+                    <div class="stat-value">Mid-Tier</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Status</div>
+                    <div class="stat-value">Active</div>
+                </div>
+            </div>
+            
+            <div class="usp-badges">
+                <span class="usp-badge strength">⚡ Key Strength: Speed</span>
+                <span class="usp-badge">🎨 Modern UI</span>
+                <span class="usp-badge weakness">⚠️ Limited Integrations</span>
+            </div>
+        </div>
+
+        <div class="insights-summary">
+            <h3>💡 Key Insights</h3>
+            <p>Based on comprehensive analysis of 8 competitors across 47 features, your product shows strong positioning in core capabilities with opportunities for strategic enhancement in emerging feature categories.</p>
+        </div>
+
+        <h2 class="section-title">💎 Key Differentiators</h2>
+        
+        <div class="insight-card">
+            <strong>1. Advanced AI-Powered Analytics</strong>
+            Your product leverages cutting-edge machine learning algorithms for predictive insights, setting it apart from competitors who rely on traditional analytics methods.
+        </div>
+
+        <div class="insight-card">
+            <strong>2. Seamless Integration Ecosystem</strong>
+            With native integrations for 50+ popular tools, your platform offers superior connectivity compared to industry averages of 20-30 integrations.
+        </div>
+
+        <h2 class="section-title">💡 Strategic Recommendations</h2>
+        
+        <div class="insight-card green">
+            <strong>1. Expand Mobile Capabilities</strong>
+            Develop native mobile apps to capture the growing mobile workforce segment. Competitors are investing heavily in this area, creating a strategic opportunity.
+        </div>
+
+        <div class="insight-card green">
+            <strong>2. Enhance Collaboration Features</strong>
+            Implement real-time collaboration tools to compete with emerging platforms that prioritize team workflows and shared insights.
+        </div>
+
+        <h2 class="section-title">⚠️ Missing Capabilities</h2>
+        
+        <div class="insight-card orange">
+            <strong>1. Real-Time Collaboration</strong> <span style="color: var(--apple-red); font-weight: bold;">(High)</span>
+            <br>Leading competitors offer live collaboration features allowing teams to work together simultaneously. This is becoming a standard expectation in modern analytics platforms.
+        </div>
+
+        <div class="insight-card orange">
+            <strong>2. Advanced Data Governance</strong> <span style="color: var(--apple-orange); font-weight: bold;">(Medium)</span>
+            <br>Enterprise customers increasingly require sophisticated data governance and compliance features. Adding this could unlock larger enterprise deals.
+        </div>
+
+        <div style="text-align: center; margin: 48px 0;">
+            <button class="button">📊 Download Full Report</button>
+        </div>
+
+        <div class="footer">
+            <p style="margin-bottom: 8px; font-weight: 500;">Powered by OpenAI GPT • Built with Streamlit</p>
+            <p style="font-size: 13px; color: var(--apple-dark-gray);">Designed by Tanishq Sharma</p>
+            <p style="margin-top: 16px; font-size: 12px; color: var(--apple-dark-gray);">© 2024 Market Landscape Board. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
