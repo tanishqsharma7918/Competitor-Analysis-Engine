@@ -100,6 +100,20 @@ section.main > div {
     width: 100%;
 }
 
+/* Override any Streamlit element container that might affect button */
+.glass-container .element-container:has(.stButton) {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.glass-container [data-testid="column"]:has(.stButton) {
+    display: flex;
+    justify-content: center;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
 /* ============================================
    VISIONOS-INSPIRED IMMERSIVE HEADER
    ============================================ */
@@ -171,13 +185,16 @@ section.main > div {
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-radius: 28px;
-    padding: 56px;
+    padding: 56px 64px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
                 0 2px 8px rgba(0, 0, 0, 0.04),
                 inset 0 1px 0 rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.6);
     margin-bottom: 48px;
     position: relative;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .glass-container::before {
@@ -213,20 +230,34 @@ section.main > div {
     font-weight: 400;
 }
 
-/* Input Section Styling - Prevent edge-to-edge stretching */
+/* Input Section Styling - Constrain width */
 .glass-container .stTextInput,
 .glass-container .stTextArea {
     max-width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+}
+
+/* Limit input box width for better aesthetics */
+.glass-container .stTextInput > div,
+.glass-container .stTextArea > div {
+    max-width: 100%;
+}
+
+.glass-container .stTextInput > div > div,
+.glass-container .stTextArea > div > div {
+    max-width: 100%;
 }
 
 /* Column containers with proper spacing */
 .glass-container [data-testid="column"] {
     padding: 0 !important;
+    flex: 1;
+    max-width: 50%;
 }
 
 .glass-container [data-testid="stHorizontalBlock"] {
     gap: 24px !important;
+    display: flex;
 }
 
 .glass-container [data-testid="stHorizontalBlock"] > div {
@@ -286,11 +317,19 @@ section.main > div {
                 0 1px 4px rgba(0, 113, 227, 0.15);
 }
 
-/* Button container centering */
-.stButton {
+/* Button container centering - Force center alignment */
+.glass-container .stButton {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-top: 40px !important;
+    width: 100% !important;
+}
+
+.glass-container .stButton > div {
     display: flex;
     justify-content: center;
-    margin-top: 32px;
+    width: 100%;
 }
 
 /* ============================================
@@ -328,20 +367,21 @@ section.main > div {
     opacity: 0.8;
 }
 
-/* Input labels */
-.stTextInput>label,
-.stTextArea>label {
-    font-size: 13px !important;
+/* Input labels - Bold and centered to box */
+.glass-container .stTextInput>label,
+.glass-container .stTextArea>label {
+    font-size: 14px !important;
     font-weight: 600 !important;
     color: #1d1d1f !important;
     margin-bottom: 10px !important;
-    letter-spacing: -0.05px;
+    letter-spacing: -0.1px !important;
     text-transform: none !important;
+    display: block !important;
 }
 
 /* Input container spacing */
-.stTextInput,
-.stTextArea {
+.glass-container .stTextInput,
+.glass-container .stTextArea {
     margin-bottom: 24px;
 }
 
@@ -778,8 +818,13 @@ button[kind="header"] {
     }
     
     .glass-container {
-        padding: 32px 24px;
+        padding: 40px 28px;
         border-radius: 20px;
+        max-width: 100%;
+    }
+    
+    .glass-container [data-testid="column"] {
+        max-width: 100% !important;
     }
     
     .immersive-header {
