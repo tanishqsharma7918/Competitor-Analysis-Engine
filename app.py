@@ -104,33 +104,28 @@ with st.sidebar:
 
 
 # -------------------------------------------------------
-# APPLE-STYLE NAVIGATION BAR
+# HEADER UI (APPLE STYLE - IMMERSIVE)
 # -------------------------------------------------------
 st.markdown("""
-<div class='apple-nav'>
-    <div class='apple-nav-content'>
-        <div>
-            <div class='apple-nav-title'>Market Landscape Board</div>
-            <div class='apple-nav-subtitle'>Competitive Intelligence Platform</div>
-        </div>
-    </div>
+<div class='immersive-header'>
+    <h1 class='immersive-title'>Competitor Analysis</h1>
+    <p class='immersive-subtitle'>Discover, analyze, and benchmark your competitive landscape with AI-powered insights</p>
 </div>
 """, unsafe_allow_html=True)
 
-# -------------------------------------------------------
-# HEADER UI (APPLE STYLE)
-# -------------------------------------------------------
-st.markdown("<div class='main-header'>", unsafe_allow_html=True)
-st.markdown("<h1>Competitor Analysis</h1>", unsafe_allow_html=True)
-st.markdown("<p>Discover, analyze, and benchmark your competitive landscape with AI-powered insights</p>", unsafe_allow_html=True)
-st.markdown("</div>", unsafe_allow_html=True)
-
 
 # -------------------------------------------------------
-# PRODUCT INPUT SECTION (UNCHANGED UI)
+# PRODUCT INPUT SECTION (CENTERED)
 # -------------------------------------------------------
+st.markdown("<div class='content-wrapper'>", unsafe_allow_html=True)
+
 with st.container():
-    st.markdown("### 📝 Product Information")
+    st.markdown("""
+    <div style='text-align: left; margin-bottom: 32px;'>
+        <h3 style='font-size: 24px; font-weight: 600; color: var(--apple-text); letter-spacing: -0.5px; margin-bottom: 8px;'>📝 Product Information</h3>
+        <p style='font-size: 15px; color: var(--apple-text-secondary); margin: 0;'>Enter your product details to begin competitive analysis</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
@@ -155,7 +150,7 @@ with st.container():
         height=100
     )
 
-    st.markdown("---")
+    st.markdown("<div style='margin: 32px 0;'></div>", unsafe_allow_html=True)
 
     col_btn1, col_btn2 = st.columns([1, 1])
 
@@ -170,6 +165,8 @@ with st.container():
                 st.session_state.results = {}
                 st.session_state.logger = None
                 st.rerun()
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 # -------------------------------------------------------
@@ -265,19 +262,26 @@ if st.session_state.logger and st.session_state.logger.get_logs():
 
 
 # -------------------------------------------------------
-# DISPLAY ANALYSIS RESULTS (UNCHANGED UI)
+# DISPLAY ANALYSIS RESULTS (IMMERSIVE)
 # -------------------------------------------------------
 if st.session_state.analysis_complete and st.session_state.results:
 
     results = st.session_state.results
-
-    st.markdown("---")
-    st.markdown("## 📊 Analysis Results")
+    
+    st.markdown("<div class='content-wrapper'>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style='text-align: center; margin: 64px 0 48px 0;'>
+        <h2 style='font-size: 40px; font-weight: 700; color: var(--apple-text); letter-spacing: -1px; margin-bottom: 12px;'>📊 Analysis Results</h2>
+        <p style='font-size: 17px; color: var(--apple-text-secondary);'>Comprehensive competitive intelligence for {}</p>
+    </div>
+    """.format(results['product_name']), unsafe_allow_html=True)
 
     # ----------------------------
     # MARKET OVERVIEW METRICS
     # ----------------------------
-    st.markdown("### 📊 Market Overview")
+    st.markdown("""
+    <h3 style='font-size: 28px; font-weight: 600; color: var(--apple-text); letter-spacing: -0.6px; margin: 48px 0 24px 0;'>📊 Market Overview</h3>
+    """, unsafe_allow_html=True)
     
     col1, col2, col3, col4 = st.columns(4)
     
@@ -321,7 +325,9 @@ if st.session_state.analysis_complete and st.session_state.results:
     # ----------------------------
     # COMPETITORS (PREMIUM CARDS)
     # ----------------------------
-    st.markdown("### 🏢 Competitor Landscape")
+    st.markdown("""
+    <h3 style='font-size: 28px; font-weight: 600; color: var(--apple-text); letter-spacing: -0.6px; margin: 48px 0 24px 0;'>🏢 Competitor Landscape</h3>
+    """, unsafe_allow_html=True)
     
     for i, comp in enumerate(results['competitors'], 1):
         # Calculate market share (simulated - in real app would come from data)
@@ -589,6 +595,8 @@ if st.session_state.analysis_complete and st.session_state.results:
             )
         except Exception as e:
             st.error(f"PPTX Error: {str(e)}")
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 # -------------------------------------------------------
@@ -596,9 +604,9 @@ if st.session_state.analysis_complete and st.session_state.results:
 # -------------------------------------------------------
 st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
 st.markdown("""
-<div style='text-align:center; color: var(--apple-text-secondary); font-size: 14px; padding: 48px 0; background: var(--apple-white); border-radius: 16px; margin-top: 32px;'>
+<div style='text-align:center; color: var(--apple-text-secondary); font-size: 14px; padding: 48px 0; background: var(--apple-white); border-radius: 16px; margin: 32px 48px;'>
     <p style='margin-bottom: 8px; font-weight: 500;'>Powered by OpenAI GPT • Built with Streamlit</p>
     <p style='font-size: 13px; color: var(--apple-dark-gray);'>Designed by Tanishq Sharma</p>
-    <p style='margin-top: 16px; font-size: 12px; color: var(--apple-dark-gray);'>© 2024 Market Landscape Board. All rights reserved.</p>
+    <p style='margin-top: 16px; font-size: 12px; color: var(--apple-dark-gray);'>© 2024 Competitor Analysis Engine. All rights reserved.</p>
 </div>
 """, unsafe_allow_html=True)
