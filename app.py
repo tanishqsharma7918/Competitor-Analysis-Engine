@@ -49,10 +49,10 @@ def run_async(coro):
 # PAGE CONFIGURATION (UNCHANGED)
 # -------------------------------------------------------
 st.set_page_config(
-    page_title="AI Competitor Analysis",
+    page_title="Competitor Analysis",
     page_icon="🎯",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
 # Load CSS styling (UNCHANGED)

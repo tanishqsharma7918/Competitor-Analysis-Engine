@@ -61,6 +61,17 @@
     max-width: 100% !important;
 }
 
+/* Force centered layout */
+section.main > div {
+    max-width: 100%;
+    padding: 0;
+}
+
+/* Streamlit columns should respect content wrapper */
+.content-wrapper [data-testid="column"] {
+    padding: 0 8px;
+}
+
 /* ============================================
    IMMERSIVE HEADER SECTION
    ============================================ */
@@ -103,9 +114,34 @@
 
 /* Content Container with proper alignment */
 .content-wrapper {
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 0 48px 48px 48px;
+}
+
+/* Input Section - Form Container */
+.content-wrapper > div:first-of-type {
+    background: var(--apple-white);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--apple-gray);
+    margin-bottom: 48px;
+}
+
+/* Input Section Styling */
+.stTextInput,
+.stTextArea {
+    max-width: 100%;
+}
+
+/* Column containers inside content wrapper */
+.content-wrapper [data-testid="column"] {
+    padding: 0 8px;
+}
+
+.content-wrapper .element-container {
+    max-width: 100%;
 }
 
 /* ============================================
@@ -547,15 +583,20 @@
 }
 
 /* ============================================
-   SIDEBAR STYLING
+   SIDEBAR STYLING (Hidden for clean look)
    ============================================ */
-.css-1d391kg {
-    background: var(--apple-white);
+[data-testid="stSidebar"] {
+    display: none;
 }
 
-[data-testid="stSidebar"] {
-    background: var(--apple-off-white);
-    border-right: 1px solid var(--apple-gray);
+/* Hide sidebar toggle button */
+[data-testid="collapsedControl"] {
+    display: none;
+}
+
+/* Hide hamburger menu */
+button[kind="header"] {
+    display: none;
 }
 
 /* ============================================
@@ -597,6 +638,11 @@
 @media (max-width: 768px) {
     .content-wrapper {
         padding: 0 20px 20px 20px;
+        max-width: 100%;
+    }
+    
+    .content-wrapper > div:first-of-type {
+        padding: 24px 20px;
     }
     
     .immersive-header {
@@ -618,5 +664,11 @@
     
     .analytics-grid {
         grid-template-columns: 1fr;
+    }
+    
+    /* Stack columns on mobile */
+    .content-wrapper [data-testid="column"] {
+        width: 100% !important;
+        padding: 0 !important;
     }
 }
