@@ -336,10 +336,9 @@ if st.session_state.analysis_complete and st.session_state.results:
         market_share = max(5, 35 - (i * 5))  # Simulated decreasing share
         pricing_tier = "Premium" if i <= 2 else "Mid-Tier" if i <= 4 else "Budget"
         weakness_badge = "<span class='usp-badge weakness'>⚠️ Complex UI</span>" if i > 2 else ""
-        website_link = f"<p style='margin-top: 16px;'><a href='{comp.get('website')}' target='_blank' style='color: var(--apple-blue); text-decoration: none; font-weight: 500;'>Visit Website →</a></p>" if comp.get('website') else ""
+        website_link = f"<p style='margin-top: 16px;'><a href='{comp.get('website', '')}' target='_blank' style='color: var(--apple-blue); text-decoration: none; font-weight: 500;'>Visit Website →</a></p>" if comp.get('website') else ""
         
-        competitor_html = f"""
-<div class='competitor-card'>
+        competitor_html = f"""<div class='competitor-card'>
     <div class='competitor-header'>
         <div>
             <div class='competitor-name'>{comp.get('company_name', 'Unknown')}</div>
@@ -370,8 +369,7 @@ if st.session_state.analysis_complete and st.session_state.results:
         {weakness_badge}
     </div>
     {website_link}
-</div>
-"""
+</div>"""
         st.markdown(competitor_html, unsafe_allow_html=True)
 
     # ----------------------------
@@ -496,12 +494,11 @@ if st.session_state.analysis_complete and st.session_state.results:
     diffs = results['analysis'].get("differentiators", [])
     if diffs:
         for i, d in enumerate(diffs, 1):
-            st.markdown(f"""
-            <div class='differentiator-card'>
-                <strong>{i}. {d.get('title')}</strong><br>
-                {d.get('description')}
-            </div>
-            """, unsafe_allow_html=True)
+            diff_html = f"""<div class='differentiator-card'>
+    <strong>{i}. {d.get('title', 'Untitled')}</strong><br>
+    {d.get('description', 'No description available')}
+</div>"""
+            st.markdown(diff_html, unsafe_allow_html=True)
     else:
         st.info("No differentiators identified.")
 
@@ -514,12 +511,11 @@ if st.session_state.analysis_complete and st.session_state.results:
     recs = results['analysis'].get("recommendations", [])
     if recs:
         for i, r in enumerate(recs, 1):
-            st.markdown(f"""
-            <div class='recommendation-card'>
-                <strong>{i}. {r.get('title')}</strong><br>
-                {r.get('description')}
-            </div>
-            """, unsafe_allow_html=True)
+            rec_html = f"""<div class='recommendation-card'>
+    <strong>{i}. {r.get('title', 'Untitled')}</strong><br>
+    {r.get('description', 'No description available')}
+</div>"""
+            st.markdown(rec_html, unsafe_allow_html=True)
     else:
         st.info("No recommendations available.")
 
@@ -538,14 +534,13 @@ if st.session_state.analysis_complete and st.session_state.results:
                 "Medium": "#ff9944",
                 "Low": "#44aa44"
             }.get(importance, "#666")
-
-            st.markdown(f"""
-            <div class='missing-capability-card'>
-                <strong>{i}. {m.get('capability')}</strong>
-                <span style='color:{color}; font-weight:bold;'>({importance})</span><br>
-                {m.get('rationale')}
-            </div>
-            """, unsafe_allow_html=True)
+            
+            missing_html = f"""<div class='missing-capability-card'>
+    <strong>{i}. {m.get('capability', 'Unknown capability')}</strong>
+    <span style='color:{color}; font-weight:bold;'>({importance})</span><br>
+    {m.get('rationale', 'No rationale provided')}
+</div>"""
+            st.markdown(missing_html, unsafe_allow_html=True)
     else:
         st.success("No major missing capabilities identified!")
 
