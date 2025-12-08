@@ -179,6 +179,15 @@ section.main > div {
     padding: 0 40px 80px 40px;
 }
 
+/* Hide any Streamlit-generated containers inside content-wrapper */
+.content-wrapper > .element-container {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 /* Glassmorphic Form Container */
 .glass-container {
     background: rgba(255, 255, 255, 0.75);
@@ -248,21 +257,25 @@ section.main > div {
     max-width: 100%;
 }
 
-/* Column containers with proper spacing */
+/* Column containers with proper spacing - More aggressive */
 .glass-container [data-testid="column"] {
     padding: 0 !important;
-    flex: 1;
-    max-width: 50%;
+    margin: 0 !important;
+    flex: 1 1 0px;
+    min-width: 0;
+    max-width: calc(50% - 12px) !important;
 }
 
 .glass-container [data-testid="stHorizontalBlock"] {
     gap: 24px !important;
-    display: flex;
+    display: flex !important;
+    width: 100% !important;
 }
 
 .glass-container [data-testid="stHorizontalBlock"] > div {
-    flex: 1;
+    flex: 1 1 0px;
     min-width: 0;
+    max-width: calc(50% - 12px);
 }
 
 .glass-container .element-container {
@@ -317,26 +330,37 @@ section.main > div {
                 0 1px 4px rgba(0, 113, 227, 0.15);
 }
 
+/* Button wrapper for perfect centering */
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
 /* Button container centering - Force center alignment */
+.button-wrapper .stButton,
 .glass-container .stButton {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    margin-top: 40px !important;
-    width: 100% !important;
+    width: auto !important;
+    margin: 0 auto !important;
 }
 
+.button-wrapper .stButton > div,
 .glass-container .stButton > div {
     display: flex;
     justify-content: center;
-    width: 100%;
+    margin: 0 auto;
 }
 
 /* ============================================
    VISIONOS GLASSMORPHIC INPUT FIELDS
    ============================================ */
-.stTextInput>div>div>input,
-.stTextArea>div>div>textarea {
+.glass-container .stTextInput>div>div>input,
+.glass-container .stTextArea>div>div>textarea {
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -348,10 +372,13 @@ section.main > div {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
                 inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
 }
 
-.stTextInput>div>div>input:focus,
-.stTextArea>div>div>textarea:focus {
+.glass-container .stTextInput>div>div>input:focus,
+.glass-container .stTextArea>div>div>textarea:focus {
     background: rgba(255, 255, 255, 0.85);
     border-color: rgba(0, 113, 227, 0.5);
     box-shadow: 0 4px 16px rgba(0, 113, 227, 0.12),
@@ -361,8 +388,8 @@ section.main > div {
     transform: translateY(-1px);
 }
 
-.stTextInput>div>div>input::placeholder,
-.stTextArea>div>div>textarea::placeholder {
+.glass-container .stTextInput>div>div>input::placeholder,
+.glass-container .stTextArea>div>div>textarea::placeholder {
     color: #86868b;
     opacity: 0.8;
 }
