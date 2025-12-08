@@ -71,7 +71,9 @@
 
 .block-container {
     padding: 0 !important;
-    max-width: 100% !important;
+    max-width: 900px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     position: relative;
     z-index: 1;
 }
