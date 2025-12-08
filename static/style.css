@@ -50,15 +50,30 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Streamlit Container Override */
+/* Streamlit Container Override with VisionOS Background */
 .main {
-    background: var(--apple-off-white);
+    background: linear-gradient(to bottom, #fafbfd 0%, #f0f2f5 100%);
     padding: 0 !important;
+    position: relative;
+}
+
+.main::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 400px;
+    background: radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.03) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .block-container {
     padding: 0 !important;
     max-width: 100% !important;
+    position: relative;
+    z-index: 1;
 }
 
 /* Force centered layout */
@@ -73,13 +88,14 @@ section.main > div {
 }
 
 /* ============================================
-   IMMERSIVE HEADER SECTION
+   VISIONOS-INSPIRED IMMERSIVE HEADER
    ============================================ */
 .immersive-header {
-    background: linear-gradient(180deg, var(--apple-white) 0%, var(--apple-off-white) 100%);
+    background: radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.05) 0%, transparent 60%), 
+                linear-gradient(180deg, #fafbfd 0%, #f5f7fa 100%);
     text-align: center;
-    padding: 80px 48px 64px 48px;
-    margin: 0 0 48px 0;
+    padding: 100px 48px 80px 48px;
+    margin: 0 0 80px 0;
     position: relative;
 }
 
@@ -87,46 +103,90 @@ section.main > div {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
-    right: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
     height: 1px;
-    background: linear-gradient(90deg, transparent 0%, var(--apple-gray) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.06) 50%, transparent 100%);
 }
 
 .immersive-title {
-    font-size: 56px;
+    font-size: 64px;
     font-weight: 700;
-    color: var(--apple-text);
-    letter-spacing: -1.5px;
-    margin-bottom: 16px;
-    line-height: 1.05;
+    background: linear-gradient(135deg, #1d1d1f 0%, #4a4a4f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+    line-height: 1;
 }
 
 .immersive-subtitle {
     font-size: 21px;
-    color: var(--apple-text-secondary);
+    color: #6e6e73;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.6;
     max-width: 680px;
     margin: 0 auto;
     letter-spacing: -0.2px;
 }
 
-/* Content Container with proper alignment */
+/* ============================================
+   VISIONOS GLASSMORPHIC CONTAINER
+   ============================================ */
 .content-wrapper {
-    max-width: 900px;
+    max-width: 780px;
     margin: 0 auto;
-    padding: 0 48px 48px 48px;
+    padding: 0 32px 80px 32px;
 }
 
-/* Input Section - Form Container */
-.content-wrapper > div:first-of-type {
-    background: var(--apple-white);
-    border-radius: var(--radius-lg);
-    padding: 32px;
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--apple-gray);
+/* Glassmorphic Form Container */
+.glass-container {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     margin-bottom: 48px;
+    position: relative;
+}
+
+.glass-container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+/* Section Header inside Glass */
+.glass-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.glass-header h3 {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1d1d1f;
+    letter-spacing: -0.6px;
+    margin-bottom: 12px;
+}
+
+.glass-header p {
+    font-size: 16px;
+    color: #6e6e73;
+    font-weight: 400;
 }
 
 /* Input Section Styling */
@@ -135,7 +195,7 @@ section.main > div {
     max-width: 100%;
 }
 
-/* Column containers inside content wrapper */
+/* Column containers */
 .content-wrapper [data-testid="column"] {
     padding: 0 8px;
 }
@@ -145,68 +205,110 @@ section.main > div {
 }
 
 /* ============================================
-   BUTTONS (Apple-Style)
+   VISIONOS GLASSMORPHIC PILL BUTTON
    ============================================ */
 .stButton>button {
-    background: var(--apple-blue);
+    background: linear-gradient(135deg, #0071e3 0%, #005fc5 100%);
     color: white;
     border: none;
-    border-radius: var(--radius-md);
-    padding: 12px 24px;
-    font-size: 15px;
-    font-weight: 500;
+    border-radius: 50px;
+    padding: 16px 40px;
+    font-size: 16px;
+    font-weight: 600;
     letter-spacing: -0.2px;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 1px 3px rgba(0, 113, 227, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 24px rgba(0, 113, 227, 0.25),
+                0 2px 8px rgba(0, 113, 227, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.stButton>button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+    border-radius: 50px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .stButton>button:hover {
-    background: var(--apple-blue-hover);
-    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.4);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #0077ed 0%, #0066d6 100%);
+    box-shadow: 0 12px 32px rgba(0, 113, 227, 0.35),
+                0 4px 16px rgba(0, 113, 227, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.stButton>button:hover::before {
+    opacity: 1;
 }
 
 .stButton>button:active {
     transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(0, 113, 227, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.25),
+                0 1px 4px rgba(0, 113, 227, 0.15);
+}
+
+/* Button container centering */
+.stButton {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
 }
 
 /* ============================================
-   INPUT FIELDS (Clean Apple Style)
+   VISIONOS GLASSMORPHIC INPUT FIELDS
    ============================================ */
 .stTextInput>div>div>input,
 .stTextArea>div>div>textarea {
-    background: var(--apple-white);
-    border: 1px solid var(--apple-gray);
-    border-radius: var(--radius-md);
-    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    padding: 16px 18px;
     font-size: 15px;
-    color: var(--apple-text);
-    transition: all 0.2s ease;
-    box-shadow: var(--shadow-sm);
+    color: #1d1d1f;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .stTextInput>div>div>input:focus,
 .stTextArea>div>div>textarea:focus {
-    border-color: var(--apple-blue);
-    box-shadow: 0 0 0 4px var(--apple-blue-light);
+    background: rgba(255, 255, 255, 0.85);
+    border-color: rgba(0, 113, 227, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.12),
+                0 0 0 4px rgba(0, 113, 227, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
     outline: none;
+    transform: translateY(-1px);
+}
+
+.stTextInput>div>div>input::placeholder,
+.stTextArea>div>div>textarea::placeholder {
+    color: #86868b;
+    opacity: 0.8;
 }
 
 /* Input labels */
 .stTextInput>label,
 .stTextArea>label {
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    color: var(--apple-text) !important;
-    margin-bottom: 8px !important;
-    letter-spacing: -0.1px;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1d1d1f !important;
+    margin-bottom: 10px !important;
+    letter-spacing: -0.05px;
+    text-transform: none !important;
 }
 
 /* Input container spacing */
 .stTextInput,
 .stTextArea {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 /* ============================================
@@ -637,25 +739,35 @@ button[kind="header"] {
    ============================================ */
 @media (max-width: 768px) {
     .content-wrapper {
-        padding: 0 20px 20px 20px;
+        padding: 0 20px 60px 20px;
         max-width: 100%;
     }
     
-    .content-wrapper > div:first-of-type {
-        padding: 24px 20px;
+    .glass-container {
+        padding: 32px 24px;
+        border-radius: 20px;
     }
     
     .immersive-header {
-        padding: 48px 20px 40px 20px;
+        padding: 60px 20px 50px 20px;
+        margin-bottom: 40px;
     }
     
     .immersive-title {
-        font-size: 36px;
-        letter-spacing: -1px;
+        font-size: 40px;
+        letter-spacing: -1.2px;
     }
     
     .immersive-subtitle {
-        font-size: 17px;
+        font-size: 18px;
+    }
+    
+    .glass-header h3 {
+        font-size: 24px;
+    }
+    
+    .glass-header p {
+        font-size: 15px;
     }
     
     .competitor-stats {
@@ -670,5 +782,11 @@ button[kind="header"] {
     .content-wrapper [data-testid="column"] {
         width: 100% !important;
         padding: 0 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .stButton>button {
+        width: 100%;
+        padding: 14px 32px;
     }
 }

@@ -115,15 +115,16 @@ st.markdown("""
 
 
 # -------------------------------------------------------
-# PRODUCT INPUT SECTION (CENTERED)
+# VISIONOS GLASSMORPHIC INPUT SECTION
 # -------------------------------------------------------
 st.markdown("<div class='content-wrapper'>", unsafe_allow_html=True)
+st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
 
 with st.container():
     st.markdown("""
-    <div style='text-align: left; margin-bottom: 32px;'>
-        <h3 style='font-size: 24px; font-weight: 600; color: var(--apple-text); letter-spacing: -0.5px; margin-bottom: 8px;'>📝 Product Information</h3>
-        <p style='font-size: 15px; color: var(--apple-text-secondary); margin: 0;'>Enter your product details to begin competitive analysis</p>
+    <div class='glass-header'>
+        <h3>📝 Product Information</h3>
+        <p>Enter your product details to begin competitive analysis</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -150,23 +151,21 @@ with st.container():
         height=100
     )
 
-    st.markdown("<div style='margin: 32px 0;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin: 16px 0;'></div>", unsafe_allow_html=True)
 
-    col_btn1, col_btn2 = st.columns([1, 1])
+    # Center the button
+    analyze_button = st.button("🚀 Analyze Competitors", type="primary")
+    
+    if st.session_state.analysis_complete:
+        clear_button = st.button("🔄 Clear Results")
+        if clear_button:
+            st.session_state.analysis_complete = False
+            st.session_state.results = {}
+            st.session_state.logger = None
+            st.rerun()
 
-    with col_btn1:
-        analyze_button = st.button("🚀 Analyze Competitors", type="primary", use_container_width=True)
-
-    with col_btn2:
-        if st.session_state.analysis_complete:
-            clear_button = st.button("🔄 Clear Results", use_container_width=True)
-            if clear_button:
-                st.session_state.analysis_complete = False
-                st.session_state.results = {}
-                st.session_state.logger = None
-                st.rerun()
-
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)  # Close glass-container
+st.markdown("</div>", unsafe_allow_html=True)  # Close content-wrapper
 
 
 # -------------------------------------------------------
