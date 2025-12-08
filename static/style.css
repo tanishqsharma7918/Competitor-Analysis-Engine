@@ -80,14 +80,28 @@
 .block-container > div,
 .block-container > .element-container {
     background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
+/* Aggressively remove vertical gaps and empty containers */
 [data-testid="stVerticalBlock"] {
     gap: 0 !important;
+    margin: 0 !important;
 }
 
 [data-testid="stVerticalBlock"] > div:empty {
     display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+}
+
+/* Hide any empty divs between sections */
+.element-container:empty {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* Force centered layout */
@@ -135,8 +149,8 @@ section.main > div {
     background: radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.05) 0%, transparent 60%), 
                 linear-gradient(180deg, #fafbfd 0%, #f5f7fa 100%);
     text-align: center !important;
-    padding: 100px 48px 80px 48px;
-    margin: 0 0 80px 0;
+    padding: 100px 48px 64px 48px;
+    margin: 0 !important;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -189,29 +203,15 @@ section.main > div {
    ============================================ */
 .content-wrapper {
     max-width: 800px;
-    margin: 0 auto;
-    padding: 0 40px 80px 40px;
+    margin: 0 auto !important;
+    padding: 0 40px 80px 40px !important;
+    position: relative;
 }
 
-/* Hide any Streamlit-generated containers inside content-wrapper */
-.content-wrapper > .element-container,
-.content-wrapper > div > .element-container,
-.content-wrapper [data-testid="stVerticalBlock"] > div,
-.content-wrapper [data-testid="stVerticalBlock"] > .element-container {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
+/* Ensure content-wrapper follows header immediately */
+.immersive-header + .element-container {
     margin: 0 !important;
-}
-
-/* Hide white box that appears before glass-container */
-.content-wrapper > div:not(.glass-container):not(.button-wrapper) {
-    display: none !important;
-}
-
-.glass-container ~ div {
-    background: transparent !important;
+    padding: 0 !important;
 }
 
 /* Glassmorphic Form Container */
@@ -356,44 +356,10 @@ section.main > div {
                 0 1px 4px rgba(0, 113, 227, 0.15);
 }
 
-/* Button wrapper for perfect centering - Maximum specificity */
-.button-wrapper,
-.glass-container > .button-wrapper {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    text-align: center !important;
-}
-
-/* Button container centering - Force center alignment at all levels */
-.button-wrapper .stButton,
-.button-wrapper > div,
-.button-wrapper .element-container,
+/* Button centering - inherits from inline flex styles */
 .glass-container .stButton {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-    text-align: center !important;
-}
-
-.button-wrapper .stButton > div,
-.button-wrapper .stButton button,
-.glass-container .stButton > div {
-    display: flex !important;
-    justify-content: center !important;
-    margin: 0 auto !important;
-}
-
-/* Override any column behavior for buttons */
-.button-wrapper [data-testid="column"] {
-    display: flex !important;
-    justify-content: center !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    width: auto !important;
+    margin: 0 !important;
 }
 
 /* ============================================

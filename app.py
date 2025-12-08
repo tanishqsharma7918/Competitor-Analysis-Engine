@@ -112,23 +112,14 @@ st.markdown("""
     <p class='immersive-subtitle'>Discover, analyze, and benchmark your competitive landscape with AI-powered insights</p>
 </div>
 """, unsafe_allow_html=True)
-
-
-# -------------------------------------------------------
-# VISIONOS GLASSMORPHIC INPUT SECTION
-# -------------------------------------------------------
-st.markdown("<div class='content-wrapper'>", unsafe_allow_html=True)
-st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
-
+st.markdown("<div class='content-wrapper'><div class='glass-container'>", unsafe_allow_html=True)
 st.markdown("""
 <div class='glass-header'>
     <h3>📝 Product Information</h3>
     <p>Enter your product details to begin competitive analysis</p>
 </div>
 """, unsafe_allow_html=True)
-
 col1, col2 = st.columns(2, gap="large")
-
 with col1:
     product_name = st.text_input(
         "Product Name *",
@@ -136,7 +127,6 @@ with col1:
         help="Enter the name of your product or the product you want to analyze",
         key="product_name"
     )
-
 with col2:
     company_name = st.text_input(
         "Company Name (Optional)",
@@ -144,7 +134,6 @@ with col2:
         help="Enter your company name if applicable",
         key="company_name"
     )
-
 product_description = st.text_area(
     "Product Description (Optional)",
     placeholder="Briefly describe what your product does, its key value proposition, and target market...",
@@ -152,26 +141,20 @@ product_description = st.text_area(
     height=100,
     key="product_description"
 )
-
-st.markdown("<div style='margin: 24px 0;'></div>", unsafe_allow_html=True)
-
-# Center the button with explicit wrapper
-st.markdown("<div class='button-wrapper'>", unsafe_allow_html=True)
-analyze_button = st.button("🚀 Analyze Competitors", type="primary", use_container_width=False)
+# Center button - NO columns, full width with CSS centering
+st.markdown("<div style='display:flex;justify-content:center;width:100%;margin-top:32px;'>", unsafe_allow_html=True)
+analyze_button = st.button("🚀 Analyze Competitors", type="primary")
 st.markdown("</div>", unsafe_allow_html=True)
-
 if st.session_state.analysis_complete:
-    st.markdown("<div class='button-wrapper'>", unsafe_allow_html=True)
-    clear_button = st.button("🔄 Clear Results", use_container_width=False)
+    st.markdown("<div style='display:flex;justify-content:center;width:100%;margin-top:16px;'>", unsafe_allow_html=True)
+    clear_button = st.button("🔄 Clear Results")
     st.markdown("</div>", unsafe_allow_html=True)
     if clear_button:
         st.session_state.analysis_complete = False
         st.session_state.results = {}
         st.session_state.logger = None
         st.rerun()
-
-st.markdown("</div>", unsafe_allow_html=True)  # Close glass-container
-st.markdown("</div>", unsafe_allow_html=True)  # Close content-wrapper
+st.markdown("</div></div>", unsafe_allow_html=True)  # Close glass-container and content-wrapper
 
 
 # -------------------------------------------------------
