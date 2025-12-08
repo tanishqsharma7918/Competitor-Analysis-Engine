@@ -134,6 +134,10 @@ st.markdown("""
     <p style='font-size: 16px; color: #6e6e73; margin-bottom: 32px; text-align: center;'>Enter your product details to begin competitive analysis</p>
 </div>
 """, unsafe_allow_html=True)
+
+# Open glass-container
+st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
+
 col1, col2 = st.columns(2, gap="large")
 with col1:
     product_name = st.text_input(
@@ -157,7 +161,7 @@ product_description = st.text_area(
     key="product_description"
 )
 
-# Centered button using CSS only
+# Centered button inside glass-container
 st.markdown("<br>", unsafe_allow_html=True)
 analyze_button = st.button("🚀 Analyze Competitors", type="primary")
 
@@ -168,7 +172,9 @@ if st.session_state.analysis_complete:
         st.session_state.results = {}
         st.session_state.logger = None
         st.rerun()
-st.markdown("</div>", unsafe_allow_html=True)  # Close content-wrapper
+
+# Close glass-container
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 # -------------------------------------------------------
