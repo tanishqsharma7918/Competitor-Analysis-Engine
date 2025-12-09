@@ -16,6 +16,14 @@ def perform_research(
 ) -> str:
     """
     Research Agent: Performs live web search to gather market intelligence.
+    NEW: Fall-back logic for better results.
+    
+    Logic:
+    1. Search for "{Product} {Company} competitors"
+    2. If results are short (<200 words) or have <3 company names:
+       - Perform SECOND search for market category
+       - Example: "Top Healthcare Dark Web Monitoring companies"
+    3. Combine both search results
     
     Args:
         product_name: Main product to analyze
@@ -24,35 +32,38 @@ def perform_research(
         logger: AgentLogger instance for logging
     
     Returns:
-        Formatted research summary from web search results
+        Formatted research summary from web search results (primary + fallback)
     """
     
     if logger:
-        logger.log_thought("🔍 Starting live web research to prevent hallucinations...")
+        logger.log_thought("🔍 Starting live web research with fall-back logic...")
     
-    # Build search query
+    # ============================================================
+    # PRIMARY SEARCH: "{Product} {Company} competitors"
+    # ============================================================
     if company_name:
-        search_query = f"{product_name} by {company_name} competitors alternatives"
+        primary_query = f"{product_name} {company_name} competitors alternatives"
     else:
-        search_query = f"{product_name} competitors alternatives"
+        primary_query = f"{product_name} competitors alternatives"
     
     if logger:
-        logger.log_action(f"Searching: '{search_query}'")
+        logger.log_action(f"Primary search: '{primary_query}'")
     
+    primary_results = []
     try:
-        # Perform web search with proper resource cleanup
         with DDGS() as ddgs:
-            results = list(ddgs.text(search_query, max_results=10))
-        
-        if not results or not isinstance(results, list):
-            if logger:
-                logger.log_observation("⚠ No search results found - falling back to LLM knowledge")
-            return ""  # Return empty string to proceed with LLM knowledge only
-        
-        # Format research summary
-        research_summary = "=== LIVE MARKET RESEARCH DATA ===\n\n"
-        
-        for i, result in enumerate(results[:10], 1):
+            primary_results = list(ddgs.text(primary_query, max_results=10))
+    except Exception as e:
+        if logger:
+            logger.log_observation(f"⚠ Primary search error: {str(e)}")
+    
+    # Format primary results
+    primary_summary = ""
+    primary_word_count = 0
+    company_name_count = 0
+    
+    if primary_results and isinstance(primary_results, list):
+        for i, result in enumerate(primary_results[:10], 1):
             if not isinstance(result, dict):
                 continue
             
@@ -60,24 +71,99 @@ def perform_research(
             snippet = result.get('body', 'No description')
             url = result.get('href', '')
             
-            research_summary += f"{i}. {title}\n"
-            research_summary += f"   {snippet}\n"
-            research_summary += f"   Source: {url}\n\n"
-        
-        research_summary += "=== END OF RESEARCH DATA ===\n"
-        
-        if logger:
-            logger.log_observation(f"✓ Retrieved {len(results)} live market sources")
-        
-        return research_summary
+            primary_summary += f"{i}. {title}\n"
+            primary_summary += f"   {snippet}\n"
+            primary_summary += f"   Source: {url}\n\n"
+            
+            # Count words and potential company names (capitalized words)
+            primary_word_count += len(snippet.split())
+            company_name_count += sum(1 for word in snippet.split() if word and word[0].isupper())
     
-    except Exception as e:
-        error_msg = f"⚠ Research error: {str(e)}"
+    if logger:
+        logger.log_observation(f"✓ Primary search: {len(primary_results)} sources, ~{primary_word_count} words, ~{company_name_count} capitalized terms")
+    
+    # ============================================================
+    # FALL-BACK LOGIC: Check if results are sufficient
+    # ============================================================
+    needs_fallback = False
+    
+    if primary_word_count < 200:
+        needs_fallback = True
         if logger:
-            logger.log_observation(error_msg)
+            logger.log_thought(f"⚠ Primary results too short ({primary_word_count} words < 200). Triggering fall-back search...")
+    elif company_name_count < 3:
+        needs_fallback = True
+        if logger:
+            logger.log_thought(f"⚠ Few company names detected ({company_name_count} < 3). Triggering fall-back search...")
+    
+    fallback_summary = ""
+    
+    if needs_fallback:
+        # ============================================================
+        # FALL-BACK SEARCH: Market category search
+        # ============================================================
+        # Extract market category from description or product name
+        if description:
+            # Use description to build category query
+            fallback_query = f"top {description} companies alternatives"
+        else:
+            # Use product name
+            fallback_query = f"top {product_name} companies market leaders"
         
-        # Return empty string to gracefully fallback to LLM knowledge
+        if logger:
+            logger.log_action(f"Fall-back search: '{fallback_query}'")
+        
+        try:
+            with DDGS() as ddgs:
+                fallback_results = list(ddgs.text(fallback_query, max_results=10))
+            
+            if fallback_results and isinstance(fallback_results, list):
+                fallback_summary = "\n=== ADDITIONAL MARKET CATEGORY SEARCH ===\n\n"
+                
+                for i, result in enumerate(fallback_results[:10], 1):
+                    if not isinstance(result, dict):
+                        continue
+                    
+                    title = result.get('title', 'Untitled')
+                    snippet = result.get('body', 'No description')
+                    url = result.get('href', '')
+                    
+                    fallback_summary += f"{i}. {title}\n"
+                    fallback_summary += f"   {snippet}\n"
+                    fallback_summary += f"   Source: {url}\n\n"
+                
+                if logger:
+                    logger.log_observation(f"✓ Fall-back search: {len(fallback_results)} additional sources retrieved")
+        
+        except Exception as e:
+            if logger:
+                logger.log_observation(f"⚠ Fall-back search error: {str(e)}")
+    
+    # ============================================================
+    # COMBINE RESULTS
+    # ============================================================
+    if not primary_summary and not fallback_summary:
+        if logger:
+            logger.log_observation("⚠ No search results from either search - falling back to LLM knowledge")
         return ""
+    
+    combined_summary = "=== LIVE MARKET RESEARCH DATA ===\n\n"
+    
+    if primary_summary:
+        combined_summary += "--- PRIMARY SEARCH RESULTS ---\n"
+        combined_summary += primary_summary
+    
+    if fallback_summary:
+        combined_summary += fallback_summary
+    
+    combined_summary += "=== END OF RESEARCH DATA ===\n"
+    
+    total_sources = len(primary_results) + (len(fallback_results) if needs_fallback and 'fallback_results' in locals() else 0)
+    
+    if logger:
+        logger.log_observation(f"✅ Total research sources: {total_sources} (Primary: {len(primary_results)}, Fall-back: {len(fallback_results) if needs_fallback and 'fallback_results' in locals() else 0})")
+    
+    return combined_summary
 
 
 def perform_category_research(
