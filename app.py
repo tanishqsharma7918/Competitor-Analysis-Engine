@@ -128,44 +128,33 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ----- FIXED HEADER + FORM WRAPPER (NO EMPTY WHITE BOXES) -----
 st.markdown("""
 <div class='content-wrapper'>
-    <h3 style='font-size: 24px; font-weight: 600; color: #1d1d1f; margin-bottom: 8px; text-align: center;'>📝 Product Information</h3>
-    <p style='font-size: 16px; color: #6e6e73; margin-bottom: 32px; text-align: center;'>Enter your product details to begin competitive analysis</p>
-
-    <div class='glass-container'>
+    <h3 style='text-align:center;'>📝 Product Information</h3>
+    <p style='text-align:center;'>Enter your product details to begin competitive analysis</p>
+<div class='glass-container'>
 """, unsafe_allow_html=True)
 
-# ------ FORM INPUTS INSIDE SAME GLASS CONTAINER ------
-col1, col2 = st.columns(2, gap="large")
+col1, col2 = st.columns(2)
 
 with col1:
     product_name = st.text_input(
-        "Product Name *",
-        placeholder="e.g., Slack, Notion, Salesforce",
-        help="Enter the name of your product or the product you want to analyze",
-        key="product_name"
+        "Product Name *", 
+        placeholder="Slack, Notion, Salesforce"
     )
 
 with col2:
     company_name = st.text_input(
         "Company Name (Optional)",
-        placeholder="e.g., Acme Corporation",
-        help="Enter your company name if applicable",
-        key="company_name"
+        placeholder="e.g., Acme Corporation"
     )
 
 product_description = st.text_area(
     "Product Description (Optional)",
-    placeholder="Briefly describe what your product does, its key value proposition, and target market...",
-    help="Providing more context helps generate more accurate competitor analysis",
-    height=100,
-    key="product_description"
+    placeholder="Describe your product..."
 )
 
-# ------ BUTTON INSIDE SAME GLASS CONTAINER (NOW CENTERS CORRECTLY) ------
-st.write("")  # small spacing
+# BUTTON MUST BE INSIDE THIS CONTAINER
 analyze_button = st.button("🚀 Analyze Competitors")
 
 if st.session_state.analysis_complete:
@@ -176,10 +165,10 @@ if st.session_state.analysis_complete:
         st.session_state.logger = None
         st.rerun()
 
-# ------ CLOSE GLASS-CONTAINER AND CONTENT-WRAPPER ------
+# Correct closing tags
 st.markdown("""
-    </div>  <!-- close glass-container -->
-</div>      <!-- close content-wrapper -->
+</div>   <!-- close glass -->
+</div>       <!-- close wrapper -->
 """, unsafe_allow_html=True)
 
 
