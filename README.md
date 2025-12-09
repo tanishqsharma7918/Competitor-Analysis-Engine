@@ -66,6 +66,6 @@ Download professional-grade outputs in multiple formats:
 | --------- | --------------------- |
 | Frontend  | Streamlit             |
 | Backend   | Python                |
-| AI Layer  | GPT-5 (API)           |
+| AI Layer  | OpenAI GPT-4o         |
 | Reports   | openpyxl, python-pptx |
 | Hosting   | Streamlit Cloud       |
