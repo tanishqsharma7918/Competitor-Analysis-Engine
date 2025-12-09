@@ -213,33 +213,22 @@ section.main > div {
 
 /* Glassmorphic Form Container */
 .glass-container {
-    background: rgba(255, 255, 255, 0.75);
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-radius: 28px;
-    padding: 56px 64px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08),
-                0 2px 8px rgba(0, 0, 0, 0.04),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    margin-bottom: 48px;
-    position: relative;
-    max-width: 650px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 32px;
+    background: rgba(255, 255, 255, 0.55);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
-.glass-container::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 28px;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+.glass-container {
+    height: unset !important;
+    min-height: unset !important;
+    display: block !important;
+    justify-content: unset !important;
+    align-items: unset !important;
 }
 
 /* Section Header inside Glass */
