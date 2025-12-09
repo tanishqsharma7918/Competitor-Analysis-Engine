@@ -132,7 +132,7 @@ Category: {description}
 {research_context}
 === END CONTEXT ===
 
-Already found: {[c['company_name'] for c in step1_competitors]}
+Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors]}
 
 ONLY suggest competitors mentioned in research data. Do NOT guess.
 
@@ -163,7 +163,7 @@ Product: {product_name}
 {research_context}
 === END CONTEXT ===
 
-Already found: {[c['company_name'] for c in step1_competitors + step2_competitors]}
+Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors + step2_competitors]}
 
 ONLY suggest competitors mentioned in research data. Do NOT guess.
 
@@ -194,7 +194,7 @@ Product: {product_name}
 {research_context}
 === END CONTEXT ===
 
-Already found: {[c['company_name'] for c in step1_competitors + step2_competitors + step3_competitors]}
+Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors + step2_competitors + step3_competitors]}
 
 ONLY suggest competitors mentioned in research data. Do NOT guess.
 
