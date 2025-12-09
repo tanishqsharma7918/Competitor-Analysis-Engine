@@ -14,7 +14,7 @@ Live URL : https://competitor-analysis-engine.streamlit.app/
 ### **🎥 DEMO**
 
 <p align="center">
-  <img src="Final_Demo.gif" alt="animated" width="600" />
+  <img src="Demo.gif" alt="animated" width="600" />
 </p>
 
 ---
