@@ -37,16 +37,17 @@ def _cached_llm_competitor_call(messages_tuple: tuple) -> Dict[str, Any]:
 
 
 # ---------------------------------------------------------
-# STEP 1: Multi-Step Competitor Discovery (GPT-4o)
+# STEP 1: Multi-Step Competitor Discovery (GPT-4o) — RESEARCH-FIRST
 # ---------------------------------------------------------
 async def _discover_competitors_multi_step(
     product_name: str,
     company_name: str,
     description: str,
+    research_context: str = "",
     logger: AgentLogger = None
 ) -> List[Dict[str, Any]]:
     """
-    Uses GPT-4o's deep reasoning to discover competitors in 4 steps:
+    RESEARCH-FIRST: Uses GPT-4o's deep reasoning with live market data to discover competitors in 4 steps:
     1. Well-known competitors
     2. Niche and small competitors
     3. Emerging startups
@@ -62,6 +63,16 @@ You are a senior competitive intelligence analyst with deep market knowledge.
 Product Name: {product_name}
 Company Name: {company_name}
 Description: {description}
+
+=== LIVE MARKET RESEARCH DATA ===
+{research_context}
+=== END OF RESEARCH DATA ===
+
+**CRITICAL GUARDRAILS:**
+- ONLY suggest competitors that appear in the research data above
+- Do NOT guess or hallucinate competitors
+- If research data is empty, acknowledge limited information
+- If the product is a specific category (e.g., External Security), do NOT suggest tools from different categories (e.g., Internal SIEM)
 
 **STEP 1: Identify 3-5 WELL-KNOWN, MARKET-LEADING competitors.**
 
@@ -97,7 +108,7 @@ Return ONLY JSON:
 """
 
     messages1 = [
-        {"role": "system", "content": "You are a world-class competitive intelligence analyst specializing in market research."},
+        {"role": "system", "content": "You are a world-class competitive intelligence analyst specializing in market research. You MUST base your analysis on the provided research data. Do not guess. Do not hallucinate competitors. If research data indicates the product is in a specific category (e.g., External Security), do NOT suggest tools from unrelated categories (e.g., Internal SIEM like Splunk)."},
         {"role": "user", "content": prompt_step1}
     ]
     
@@ -117,13 +128,19 @@ Now identify 2-3 NICHE or SMALLER competitors that compete in specific segments 
 Product: {product_name}
 Category: {description}
 
+=== RESEARCH CONTEXT ===
+{research_context}
+=== END CONTEXT ===
+
 Already found: {[c['company_name'] for c in step1_competitors]}
+
+ONLY suggest competitors mentioned in research data. Do NOT guess.
 
 Return same JSON format as before.
 """
 
     messages2 = [
-        {"role": "system", "content": "You are a competitive intelligence specialist focusing on emerging and niche players."},
+        {"role": "system", "content": "You are a competitive intelligence specialist focusing on emerging and niche players. Base all suggestions on research data only."},
         {"role": "user", "content": prompt_step2}
     ]
     
@@ -141,13 +158,20 @@ Return same JSON format as before.
 Identify 2-3 EMERGING STARTUPS or NEW ENTRANTS in this space.
 
 Product: {product_name}
+
+=== RESEARCH CONTEXT ===
+{research_context}
+=== END CONTEXT ===
+
 Already found: {[c['company_name'] for c in step1_competitors + step2_competitors]}
+
+ONLY suggest competitors mentioned in research data. Do NOT guess.
 
 Return same JSON format.
 """
 
     messages3 = [
-        {"role": "system", "content": "You are a startup ecosystem analyst tracking emerging competitors."},
+        {"role": "system", "content": "You are a startup ecosystem analyst tracking emerging competitors. Only suggest companies found in research data."},
         {"role": "user", "content": prompt_step3}
     ]
     
@@ -165,13 +189,20 @@ Return same JSON format.
 Identify 2-3 OPEN-SOURCE or LOW-COST ALTERNATIVES.
 
 Product: {product_name}
+
+=== RESEARCH CONTEXT ===
+{research_context}
+=== END CONTEXT ===
+
 Already found: {[c['company_name'] for c in step1_competitors + step2_competitors + step3_competitors]}
+
+ONLY suggest competitors mentioned in research data. Do NOT guess.
 
 Return same JSON format.
 """
 
     messages4 = [
-        {"role": "system", "content": "You are an open-source software analyst."},
+        {"role": "system", "content": "You are an open-source software analyst. Only suggest alternatives found in research data."},
         {"role": "user", "content": prompt_step4}
     ]
     
@@ -244,7 +275,7 @@ Return ONLY JSON:
 """
 
         messages = [
-            {"role": "system", "content": "You are a factual verification specialist with access to company databases."},
+            {"role": "system", "content": "You are a factual verification specialist with access to company databases. Do not guess. Only verify based on known facts."},
             {"role": "user", "content": verification_prompt}
         ]
         
@@ -274,17 +305,19 @@ Return ONLY JSON:
 
 
 # ---------------------------------------------------------
-# MAIN — ASYNC COMPETITOR DISCOVERY (UPGRADED TO GPT-4o)
+# MAIN — ASYNC COMPETITOR DISCOVERY (RESEARCH-FIRST)
 # ---------------------------------------------------------
 async def discover_competitors(
     product_name: str,
     company_name: str = "",
     description: str = "",
+    research_context: str = "",
     logger: AgentLogger = None,
     use_cache: bool = True
 ) -> List[Dict[str, Any]]:
     """
-    Fully upgraded competitor discovery using GPT-4o with:
+    RESEARCH-FIRST competitor discovery using GPT-4o with:
+    - Live web search context injection
     - Multi-step discovery (4 stages)
     - Verification of all competitors
     - Enhanced competitor details
@@ -300,12 +333,12 @@ async def discover_competitors(
                 logger.log_observation(f"Loaded {len(cached)} competitors from cache.")
             return cached
 
-    # 2. Multi-step discovery
+    # 2. Multi-step discovery WITH RESEARCH CONTEXT
     if logger:
-        logger.log_action("🚀 Starting GPT-4o powered multi-step competitor discovery...")
+        logger.log_action("🚀 Starting RESEARCH-FIRST GPT-4o powered competitor discovery...")
     
     competitors = await _discover_competitors_multi_step(
-        product_name, company_name, description, logger
+        product_name, company_name, description, research_context, logger
     )
     
     # 3. Verify competitors
