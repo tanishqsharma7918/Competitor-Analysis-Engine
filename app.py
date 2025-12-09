@@ -658,18 +658,3 @@ st.markdown("""
     <p style='margin-top: 16px; font-size: 12px; color: var(--apple-dark-gray);'>© 2024 Competitor Analysis Engine. All rights reserved.</p>
 </div>
 """, unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-
-
-# -------------------------------------------------------
-# FOOTER (APPLE STYLE)
-# -------------------------------------------------------
-st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-st.markdown("""
-<div style='text-align:center; color: var(--apple-text-secondary); font-size: 14px; padding: 48px 0; background: var(--apple-white); border-radius: 16px; margin: 32px 48px;'>
-    <p style='margin-bottom: 8px; font-weight: 500;'>Powered by OpenAI GPT • Built with Streamlit</p>
-    <p style='font-size: 13px; color: var(--apple-dark-gray);'>Designed by Tanishq Sharma</p>
-    <p style='margin-top: 16px; font-size: 12px; color: var(--apple-dark-gray);'>© 2024 Competitor Analysis Engine. All rights reserved.</p>
-</div>
-""", unsafe_allow_html=True)
