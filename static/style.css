@@ -1,6 +1,6 @@
 /* ============================================
    MICROSOFT FLUENT + APPLE TYPOGRAPHY HYBRID
-   Premium Design System
+   Premium Design System - GLOBAL FIX VERSION
    ============================================ */
 
 /* Import Inter Font (Primary Typography) */
@@ -12,6 +12,11 @@
     --fluent-blue-hover: #115EA3;
     --fluent-blue-pressed: #0F548C;
     --fluent-blue-light: #EBF3FC;
+    
+    /* Green Button Colors (New) */
+    --button-green: #22C55E;
+    --button-green-hover: #16A34A;
+    --button-green-pressed: #15803D;
     
     /* Neutral Colors */
     --neutral-white: #FFFFFF;
@@ -35,11 +40,9 @@
     --warning-orange: #F7630C;
     --error-red: #D13438;
     
-    /* Shadows (Fluent Style - Subtle) */
-    --shadow-2: 0 0.3px 0.9px rgba(0, 0, 0, 0.07), 0 1.6px 3.6px rgba(0, 0, 0, 0.04);
-    --shadow-4: 0 0.6px 1.8px rgba(0, 0, 0, 0.07), 0 3.2px 7.2px rgba(0, 0, 0, 0.04);
-    --shadow-8: 0 1.2px 3.6px rgba(0, 0, 0, 0.09), 0 6.4px 14.4px rgba(0, 0, 0, 0.05);
-    --shadow-16: 0 2.4px 7.2px rgba(0, 0, 0, 0.11), 0 12.8px 28.8px rgba(0, 0, 0, 0.07);
+    /* Button Shadow Only */
+    --button-shadow: 0 6px 20px rgba(34, 197, 94, 0.3);
+    --button-shadow-hover: 0 8px 24px rgba(34, 197, 94, 0.4);
     
     /* Border Radius (Fluent Style) */
     --radius-small: 4px;
@@ -59,20 +62,48 @@
 }
 
 /* ============================================
+   GLOBAL FIXES - TEXT OVERLAP PREVENTION
+   ============================================ */
+
+/* 1️⃣ Prevent ALL text overlapping globally */
+* {
+    line-height: 1.4 !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
+}
+
+/* Disable ALL shadows except buttons */
+* {
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+/* Remove default Streamlit spacing issues */
+.block-container, 
+.stMarkdown, 
+.element-container {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* ============================================
    GLOBAL STYLES & TYPOGRAPHY
    ============================================ */
 
 /* Global Typography - Inter with Apple polish */
 * {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 /* Body Background - Soft Gradient */
 body, .main, [data-testid="stAppViewContainer"] {
     background: linear-gradient(180deg, #F6F7FB 0%, #ECEEF3 100%) !important;
-    min-height: 100vh;
+    min-height: 100vh !important;
 }
 
 /* Main container spacing */
@@ -83,19 +114,14 @@ body, .main, [data-testid="stAppViewContainer"] {
     margin: 0 auto !important;
 }
 
-/* Remove default Streamlit spacing issues */
-.element-container {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Typography Hierarchy - Apple Style */
+/* Typography Hierarchy - Apple Style with improved contrast */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text-primary) !important;
     font-weight: 700 !important;
     letter-spacing: -0.02em !important;
     margin: 0 !important;
     text-align: center !important;
+    line-height: 1.2 !important;
 }
 
 h1 {
@@ -150,7 +176,7 @@ p, .stMarkdown p {
 }
 
 /* ============================================
-   FLUENT CARD SYSTEM
+   FLUENT CARD SYSTEM (with selective shadows)
    ============================================ */
 .fluent-card {
     background: var(--neutral-white) !important;
@@ -158,12 +184,12 @@ p, .stMarkdown p {
     border-radius: var(--radius-large) !important;
     padding: var(--spacing-xxxl) !important;
     margin-bottom: var(--spacing-xxxl) !important;
-    box-shadow: var(--shadow-4) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .fluent-card:hover {
-    box-shadow: var(--shadow-8) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
     border-color: var(--neutral-gray-50) !important;
 }
 
@@ -203,9 +229,9 @@ p, .stMarkdown p {
 
 .stTextInput > div > div > input:focus,
 .stTextArea > div > div > textarea:focus {
-    border-color: var(--fluent-blue) !important;
+    border-color: var(--button-green) !important;
     outline: none !important;
-    box-shadow: 0 0 0 1px var(--fluent-blue) !important;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2) !important;
 }
 
 .stTextInput > div > div > input::placeholder,
@@ -242,31 +268,34 @@ p, .stMarkdown p {
 }
 
 /* ============================================
-   BUTTON STYLES (FLUENT PRIMARY)
+   3️⃣ BUTTON STYLES - GREEN WITH PERFECT CENTERING
    ============================================ */
+
+/* Global button container centering */
 .stButton {
-    width: 100% !important;
-    text-align: center !important;
     display: flex !important;
     justify-content: center !important;
+    width: 100% !important;
+    text-align: center !important;
     margin: var(--spacing-xxl) 0 !important;
 }
 
+/* All button variants - GREEN THEME */
 .stButton > button,
 button[kind="primary"],
 .stForm button[type="submit"],
 [data-testid="stFormSubmitButton"] button,
 .stFormSubmitButton button {
-    background: var(--fluent-blue) !important;
-    color: var(--neutral-white) !important;
+    background: var(--button-green) !important;
+    color: #FFFFFF !important;
     border: none !important;
-    border-radius: var(--radius-medium) !important;
+    border-radius: 10px !important;
     padding: 12px 32px !important;
     font-size: 15px !important;
     font-weight: 600 !important;
     letter-spacing: 0 !important;
-    box-shadow: var(--shadow-2) !important;
-    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: var(--button-shadow) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     cursor: pointer !important;
     display: inline-block !important;
     margin: 0 auto !important;
@@ -278,9 +307,9 @@ button[kind="primary"]:hover,
 .stForm button[type="submit"]:hover,
 [data-testid="stFormSubmitButton"] button:hover,
 .stFormSubmitButton button:hover {
-    background: var(--fluent-blue-hover) !important;
-    box-shadow: var(--shadow-4) !important;
-    transform: translateY(-1px) !important;
+    background: var(--button-green-hover) !important;
+    box-shadow: var(--button-shadow-hover) !important;
+    transform: translateY(-2px) !important;
 }
 
 .stButton > button:active,
@@ -288,9 +317,9 @@ button[kind="primary"]:active,
 .stForm button[type="submit"]:active,
 [data-testid="stFormSubmitButton"] button:active,
 .stFormSubmitButton button:active {
-    background: var(--fluent-blue-pressed) !important;
+    background: var(--button-green-pressed) !important;
     transform: translateY(0) !important;
-    box-shadow: var(--shadow-2) !important;
+    box-shadow: var(--button-shadow) !important;
 }
 
 /* Secondary Button (Clear Results) */
@@ -298,15 +327,38 @@ button[kind="primary"]:active,
     background: var(--neutral-white) !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--neutral-gray-50) !important;
+    box-shadow: none !important;
 }
 
 .stButton > button[kind="secondary"]:hover {
     background: var(--neutral-gray-10) !important;
     border-color: var(--neutral-gray-60) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Download buttons - keep centered */
+.stDownloadButton {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+.stDownloadButton > button {
+    background: var(--button-green) !important;
+    color: #FFFFFF !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    box-shadow: var(--button-shadow) !important;
+}
+
+.stDownloadButton > button:hover {
+    background: var(--button-green-hover) !important;
+    box-shadow: var(--button-shadow-hover) !important;
 }
 
 /* ============================================
-   COMPETITOR CARDS (FLUENT STYLE)
+   COMPETITOR CARDS (FLUENT STYLE - FIXED SPACING)
    ============================================ */
 .competitor-card {
     background: var(--neutral-white) !important;
@@ -314,7 +366,7 @@ button[kind="primary"]:active,
     border-radius: var(--radius-large) !important;
     padding: var(--spacing-xxl) !important;
     margin-bottom: var(--spacing-xl) !important;
-    box-shadow: var(--shadow-2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
@@ -322,7 +374,7 @@ button[kind="primary"]:active,
 }
 
 .competitor-card:hover {
-    box-shadow: var(--shadow-8) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
     transform: translateY(-2px) !important;
     border-color: var(--neutral-gray-50) !important;
 }
@@ -341,10 +393,11 @@ button[kind="primary"]:active,
     font-weight: 700 !important;
     color: var(--text-primary) !important;
     letter-spacing: -0.01em !important;
-    margin-bottom: 4px !important;
+    margin-bottom: 6px !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
     max-width: 100% !important;
+    line-height: 1.3 !important;
 }
 
 .competitor-product {
@@ -354,16 +407,18 @@ button[kind="primary"]:active,
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
     max-width: 100% !important;
+    line-height: 1.4 !important;
 }
 
 .market-share-badge {
-    background: var(--fluent-blue-light) !important;
-    color: var(--fluent-blue) !important;
+    background: rgba(34, 197, 94, 0.1) !important;
+    color: var(--button-green) !important;
     padding: 6px 12px !important;
     border-radius: 16px !important;
     font-size: 12px !important;
     font-weight: 600 !important;
     white-space: nowrap !important;
+    box-shadow: none !important;
 }
 
 .competitor-description {
@@ -393,7 +448,8 @@ button[kind="primary"]:active,
     font-weight: 600 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
-    margin-bottom: 4px !important;
+    margin-bottom: 6px !important;
+    line-height: 1.2 !important;
 }
 
 .stat-value {
@@ -401,6 +457,7 @@ button[kind="primary"]:active,
     font-weight: 700 !important;
     color: var(--text-primary) !important;
     letter-spacing: -0.01em !important;
+    line-height: 1.3 !important;
 }
 
 /* USP Badges */
@@ -418,6 +475,8 @@ button[kind="primary"]:active,
     border-radius: 12px !important;
     font-size: 12px !important;
     font-weight: 500 !important;
+    box-shadow: none !important;
+    line-height: 1.3 !important;
 }
 
 .usp-badge.strength {
@@ -432,7 +491,7 @@ button[kind="primary"]:active,
 
 /* Competitor Website Link */
 .competitor-card a {
-    color: var(--fluent-blue) !important;
+    color: var(--button-green) !important;
     text-decoration: none !important;
     font-weight: 600 !important;
     font-size: 14px !important;
@@ -459,17 +518,14 @@ button[kind="primary"]:active,
     color: var(--text-primary) !important;
     letter-spacing: -0.02em !important;
     margin-bottom: var(--spacing-s) !important;
+    line-height: 1.2 !important;
 }
 
 .section-subtitle {
     font-size: 16px !important;
     color: var(--text-secondary) !important;
     font-weight: 400 !important;
-}
-
-/* Remove section dividers (clean spacing instead) */
-.section-divider {
-    display: none !important;
+    line-height: 1.5 !important;
 }
 
 /* ============================================
@@ -481,7 +537,7 @@ button[kind="primary"]:active,
     border-radius: var(--radius-large) !important;
     padding: var(--spacing-xxxl) !important;
     margin: var(--spacing-xxxl) 0 !important;
-    box-shadow: var(--shadow-4) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
 }
 
 .analytics-header {
@@ -491,6 +547,7 @@ button[kind="primary"]:active,
     letter-spacing: -0.02em !important;
     margin-bottom: var(--spacing-xxl) !important;
     text-align: center !important;
+    line-height: 1.2 !important;
 }
 
 .analytics-grid {
@@ -508,11 +565,12 @@ button[kind="primary"]:active,
     transition: all 0.2s ease !important;
     word-wrap: break-word !important;
     overflow-wrap: break-word !important;
+    box-shadow: none !important;
 }
 
 .metric-card:hover {
     background: var(--neutral-white) !important;
-    box-shadow: var(--shadow-4) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
     transform: translateY(-2px) !important;
 }
 
@@ -522,6 +580,7 @@ button[kind="primary"]:active,
     color: var(--text-primary) !important;
     letter-spacing: -0.02em !important;
     margin-bottom: var(--spacing-s) !important;
+    line-height: 1.1 !important;
 }
 
 .metric-label {
@@ -530,6 +589,7 @@ button[kind="primary"]:active,
     font-weight: 500 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
+    line-height: 1.3 !important;
 }
 
 /* ============================================
@@ -541,7 +601,7 @@ button[kind="primary"]:active,
     background: var(--neutral-white) !important;
     border-radius: var(--radius-large) !important;
     padding: var(--spacing-xxl) !important;
-    box-shadow: var(--shadow-2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
     border: 1px solid var(--neutral-gray-40) !important;
 }
 
@@ -561,6 +621,7 @@ button[kind="primary"]:active,
     padding: 12px 16px !important;
     border-bottom: 2px solid var(--neutral-gray-40) !important;
     text-align: left !important;
+    line-height: 1.3 !important;
 }
 
 .feature-matrix td {
@@ -568,6 +629,7 @@ button[kind="primary"]:active,
     border-bottom: 1px solid var(--neutral-gray-30) !important;
     font-size: 14px !important;
     color: var(--text-secondary) !important;
+    line-height: 1.4 !important;
 }
 
 .feature-matrix tr:last-child td {
@@ -584,13 +646,13 @@ button[kind="primary"]:active,
     border-radius: var(--radius-large) !important;
     padding: var(--spacing-xxl) !important;
     margin-bottom: var(--spacing-l) !important;
-    box-shadow: var(--shadow-2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
     transition: all 0.2s ease !important;
 }
 
 .differentiator-card:hover,
 .insight-card:hover {
-    box-shadow: var(--shadow-4) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
     transform: translateY(-2px) !important;
 }
 
@@ -600,6 +662,7 @@ button[kind="primary"]:active,
     font-weight: 700 !important;
     color: var(--text-primary) !important;
     margin-bottom: var(--spacing-m) !important;
+    line-height: 1.3 !important;
 }
 
 .differentiator-description,
@@ -607,6 +670,46 @@ button[kind="primary"]:active,
     color: var(--text-secondary) !important;
     font-size: 14px !important;
     line-height: 1.6 !important;
+}
+
+/* ============================================
+   4️⃣ TABS - FIXED READABILITY
+   ============================================ */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    border-bottom: 1px solid var(--neutral-gray-40) !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+    background: transparent !important;
+    border: none !important;
+    color: #444444 !important;
+    font-weight: 500 !important;
+    font-size: 16px !important;
+    padding: 12px 24px !important;
+    border-radius: 8px 8px 0 0 !important;
+    transition: all 0.15s ease !important;
+    line-height: 1.4 !important;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    background: var(--neutral-gray-10) !important;
+    color: #222222 !important;
+}
+
+.stTabs [aria-selected="true"] {
+    background: #E5E7EB !important;
+    color: #111111 !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+}
+
+/* Tab content area */
+.stTabs [data-baseweb="tab-panel"] {
+    padding-top: var(--spacing-xl) !important;
 }
 
 /* ============================================
@@ -621,6 +724,8 @@ button[kind="primary"]:active,
     color: var(--text-primary) !important;
     font-size: 15px !important;
     transition: all 0.15s ease !important;
+    line-height: 1.4 !important;
+    box-shadow: none !important;
 }
 
 .streamlit-expanderHeader:hover {
@@ -628,36 +733,21 @@ button[kind="primary"]:active,
     border-color: var(--neutral-gray-50) !important;
 }
 
+.streamlit-expanderContent {
+    padding: var(--spacing-l) !important;
+    line-height: 1.6 !important;
+}
+
 /* ============================================
-   TABS (FLUENT STYLE)
+   5️⃣ FOOTER - TRANSPARENT FIX
    ============================================ */
-.stTabs [data-baseweb="tab-list"] {
-    gap: 0 !important;
-    background: var(--neutral-white) !important;
-    border-radius: var(--radius-medium) !important;
-    padding: 4px !important;
-    border: 1px solid var(--neutral-gray-40) !important;
-}
-
-.stTabs [data-baseweb="tab"] {
+.footer-box,
+.fluent-card.footer-box,
+[class*="footer"] {
     background: transparent !important;
+    box-shadow: none !important;
     border: none !important;
-    color: var(--text-secondary) !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-    padding: 10px 20px !important;
-    border-radius: var(--radius-small) !important;
-    transition: all 0.15s ease !important;
-}
-
-.stTabs [data-baseweb="tab"]:hover {
-    background: var(--neutral-gray-10) !important;
-    color: var(--text-primary) !important;
-}
-
-.stTabs [aria-selected="true"] {
-    background: var(--fluent-blue) !important;
-    color: var(--neutral-white) !important;
+    padding: var(--spacing-xxl) 0 !important;
 }
 
 /* ============================================
@@ -681,7 +771,7 @@ button[kind="header"] {
 .stDataFrame {
     border-radius: var(--radius-medium) !important;
     overflow: hidden !important;
-    box-shadow: var(--shadow-2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
     border: 1px solid var(--neutral-gray-40) !important;
 }
 
@@ -720,6 +810,28 @@ button[kind="header"] {
     font-family: 'Courier New', monospace !important;
     font-size: 12px !important;
     color: var(--text-secondary) !important;
+    line-height: 1.6 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    box-shadow: none !important;
+}
+
+/* ============================================
+   SUCCESS/ERROR MESSAGES (FLUENT STYLE)
+   ============================================ */
+.stAlert {
+    border-radius: var(--radius-medium) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
+    padding: var(--spacing-l) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+    line-height: 1.5 !important;
+}
+
+/* ============================================
+   SPINNER (GREEN THEME)
+   ============================================ */
+.stSpinner > div {
+    border-color: var(--button-green) transparent transparent transparent !important;
 }
 
 /* ============================================
@@ -777,12 +889,16 @@ button[kind="header"] {
     h3 {
         font-size: 22px !important;
     }
+    
+    .stTabs [data-baseweb="tab"] {
+        font-size: 14px !important;
+        padding: 10px 16px !important;
+    }
 }
 
 /* ============================================
    CLEAN UP EMPTY CONTAINERS
    ============================================ */
-/* Remove empty divs and whitespace */
 .element-container:empty {
     display: none !important;
 }
@@ -791,30 +907,23 @@ button[kind="header"] {
     display: none !important;
 }
 
-/* Ensure consistent spacing between major sections */
 [data-testid="stVerticalBlock"] > div[data-testid="element-container"] {
     margin-bottom: 0 !important;
 }
 
-/* Remove extra padding from form containers */
 .stForm {
     border: none !important;
     padding: 0 !important;
 }
 
 /* ============================================
-   SUCCESS/ERROR MESSAGES (FLUENT STYLE)
+   ENSURE HTML RENDERING (NO RAW CODE)
    ============================================ */
-.stAlert {
-    border-radius: var(--radius-medium) !important;
-    border: 1px solid var(--neutral-gray-40) !important;
-    padding: var(--spacing-l) !important;
-    box-shadow: var(--shadow-2) !important;
+.stMarkdown code {
+    display: none !important;
 }
 
-/* ============================================
-   SPINNER (FLUENT STYLE)
-   ============================================ */
-.stSpinner > div {
-    border-color: var(--fluent-blue) transparent transparent transparent !important;
+/* Force proper HTML rendering */
+.stMarkdown [data-testid="stMarkdownContainer"] {
+    overflow: visible !important;
 }

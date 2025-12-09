@@ -650,10 +650,10 @@ if st.session_state.analysis_complete and st.session_state.results:
 
 
 # -------------------------------------------------------
-# FOOTER (FLUENT STYLE)
+# FOOTER (TRANSPARENT - FIXED)
 # -------------------------------------------------------
 st.markdown("""
-<div class='fluent-card' style='text-align:center; margin-top: 64px; margin-bottom: 32px;'>
+<div class='footer-box' style='text-align:center; margin-top: 64px; margin-bottom: 32px;'>
     <p style='margin-bottom: 8px; font-weight: 500; color: var(--text-secondary);'>Powered by OpenAI GPT-4o • Built with Streamlit</p>
     <p style='font-size: 13px; color: var(--text-tertiary);'>Designed by Tanishq Sharma</p>
     <p style='margin-top: 16px; font-size: 12px; color: var(--text-tertiary);'>© 2024 Competitor Analysis Engine. All rights reserved.</p>
