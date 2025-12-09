@@ -128,17 +128,25 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# -----------------------------
+# PRODUCT INFORMATION SECTION
+# -----------------------------
+st.markdown("""
+<div class='content-wrapper'>
+    <h3 style='text-align:center;'>📝 Product Information</h3>
+    <p style='text-align:center;'>Enter your product details to begin competitive analysis</p>
+</div>
+""", unsafe_allow_html=True)
+
+# GLASS CONTAINER WRAPS EVERYTHING:
 with st.container():
     st.markdown("""
-    <div class='content-wrapper'>
-        <h3 style='text-align:center;'>📝 Product Information</h3>
-        <p style='text-align:center;'>Enter your product details to begin competitive analysis</p>
-    </div>
-    <div class='glass-container'>
+    <div class='glass-container' style='padding: 32px;'>
     """, unsafe_allow_html=True)
-    
+
+    # FORM INPUTS
     col1, col2 = st.columns(2)
-    
+
     with col1:
         product_name = st.text_input(
             "Product Name *", 
@@ -150,24 +158,30 @@ with st.container():
             "Company Name (Optional)",
             placeholder="e.g., Acme Corporation"
         )
-    
+
     product_description = st.text_area(
         "Product Description (Optional)",
         placeholder="Describe your product..."
     )
-    
-    # BUTTON MUST BE INSIDE THIS CONTAINER
+
+    # BUTTON — NOW CENTERED NATURALLY
+    st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
     analyze_button = st.button("🚀 Analyze Competitors")
-    
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # Optional: clear button
     if st.session_state.analysis_complete:
+        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
         clear_button = st.button("🔄 Clear Results")
+        st.markdown("</div>", unsafe_allow_html=True)
+
         if clear_button:
             st.session_state.analysis_complete = False
             st.session_state.results = {}
             st.session_state.logger = None
             st.rerun()
-    
-    st.markdown("</div>", unsafe_allow_html=True)  # Close glass-container
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 # -------------------------------------------------------
