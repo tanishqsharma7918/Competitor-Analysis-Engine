@@ -58,21 +58,24 @@ async def _discover_competitors_multi_step(
         logger.log_thought("🔍 Step 1/4: Discovering well-known competitors...")
     
     prompt_step1 = f"""
-You are a senior competitive intelligence analyst with deep market knowledge.
+You are a Market Research & Competitor Analysis Expert.
 
-Product Name: {product_name}
-Company Name: {company_name}
-Description: {description}
-
-=== LIVE MARKET RESEARCH DATA ===
+REAL-TIME CONTEXT FROM WEB SEARCH:
+---
 {research_context}
-=== END OF RESEARCH DATA ===
+---
 
-**CRITICAL GUARDRAILS:**
-- ONLY suggest competitors that appear in the research data above
-- Do NOT guess or hallucinate competitors
-- If research data is empty, acknowledge limited information
-- If the product is a specific category (e.g., External Security), do NOT suggest tools from different categories (e.g., Internal SIEM)
+TASK:
+Analyze the product '{product_name}' by '{company_name}' (Description: {description}) based ONLY on the context above.
+
+1. **Identify the Precise Niche:** Define the specific market category (e.g., if it's 'Medical Device Security', do NOT just say 'Healthcare').
+
+2. **Select 3-5 Direct Competitors:**
+   - Look for companies that solve the *exact same problem* for the *exact same customer*.
+   - **Guardrail:** If the product is a technical B2B tool (like 'External Threat Intel'), DO NOT suggest generic consumer apps or internal compliance checklists.
+   - **Guardrail:** If the product is 'Internal' (installable), do not suggest 'External' (SaaS scanning) tools unless they are the primary alternative.
+
+3. **Explain Your Reasoning:** For each competitor, explain *why* it is a functional alternative based on the search data.
 
 **STEP 1: Identify 3-5 WELL-KNOWN, MARKET-LEADING competitors.**
 
@@ -108,7 +111,7 @@ Return ONLY JSON:
 """
 
     messages1 = [
-        {"role": "system", "content": "You are a world-class competitive intelligence analyst specializing in market research. You MUST base your analysis on the provided research data. Do not guess. Do not hallucinate competitors. If research data indicates the product is in a specific category (e.g., External Security), do NOT suggest tools from unrelated categories (e.g., Internal SIEM like Splunk)."},
+        {"role": "system", "content": "You are a Market Research & Competitor Analysis Expert. CRITICAL RULES: 1) Base ALL analysis ONLY on provided research data. 2) Identify the PRECISE niche, not generic categories. 3) Select competitors solving the EXACT same problem for the EXACT same customer. 4) DO NOT mix Internal vs External tools. 5) DO NOT mix B2B technical tools with consumer apps. 6) Explain WHY each competitor is a functional alternative."},
         {"role": "user", "content": prompt_step1}
     ]
     
@@ -123,24 +126,31 @@ Return ONLY JSON:
         logger.log_thought("🔍 Step 2/4: Discovering niche and small competitors...")
     
     prompt_step2 = f"""
-Now identify 2-3 NICHE or SMALLER competitors that compete in specific segments or regions.
+REAL-TIME CONTEXT FROM WEB SEARCH:
+---
+{research_context}
+---
 
 Product: {product_name}
 Category: {description}
 
-=== RESEARCH CONTEXT ===
-{research_context}
-=== END CONTEXT ===
-
 Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors]}
 
-ONLY suggest competitors mentioned in research data. Do NOT guess.
+**STEP 2: Identify 2-3 NICHE or SMALLER competitors**
+
+RULES:
+1. Focus on the PRECISE niche (not generic category)
+2. Select competitors solving the EXACT same problem
+3. If product is 'Internal', do NOT suggest 'External' tools
+4. If product is B2B technical, do NOT suggest consumer apps
+5. Base suggestions ONLY on research data above
+6. Explain WHY each is a functional alternative
 
 Return same JSON format as before.
 """
 
     messages2 = [
-        {"role": "system", "content": "You are a competitive intelligence specialist focusing on emerging and niche players. Base all suggestions on research data only."},
+        {"role": "system", "content": "You are a Market Research Expert focusing on niche players. CRITICAL: Identify PRECISE niche, not generic categories. Select competitors solving EXACT same problem. DO NOT mix Internal/External or B2B/consumer tools. Base ALL suggestions on research data only."},
         {"role": "user", "content": prompt_step2}
     ]
     
@@ -155,23 +165,30 @@ Return same JSON format as before.
         logger.log_thought("🔍 Step 3/4: Discovering emerging startups...")
     
     prompt_step3 = f"""
-Identify 2-3 EMERGING STARTUPS or NEW ENTRANTS in this space.
+REAL-TIME CONTEXT FROM WEB SEARCH:
+---
+{research_context}
+---
 
 Product: {product_name}
 
-=== RESEARCH CONTEXT ===
-{research_context}
-=== END CONTEXT ===
-
 Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors + step2_competitors]}
 
-ONLY suggest competitors mentioned in research data. Do NOT guess.
+**STEP 3: Identify 2-3 EMERGING STARTUPS or NEW ENTRANTS**
+
+RULES:
+1. Focus on the PRECISE niche (not generic category)
+2. Select startups solving the EXACT same problem
+3. Maintain Internal vs External distinction
+4. Maintain B2B technical vs consumer distinction
+5. Base suggestions ONLY on research data above
+6. Explain WHY each is a functional alternative
 
 Return same JSON format.
 """
 
     messages3 = [
-        {"role": "system", "content": "You are a startup ecosystem analyst tracking emerging competitors. Only suggest companies found in research data."},
+        {"role": "system", "content": "You are a Market Research Expert tracking emerging startups. CRITICAL: Identify PRECISE niche. Select startups solving EXACT same problem. Maintain Internal/External and B2B/consumer distinctions. Base ALL suggestions on research data only."},
         {"role": "user", "content": prompt_step3}
     ]
     
@@ -186,23 +203,30 @@ Return same JSON format.
         logger.log_thought("🔍 Step 4/4: Discovering open-source and budget alternatives...")
     
     prompt_step4 = f"""
-Identify 2-3 OPEN-SOURCE or LOW-COST ALTERNATIVES.
+REAL-TIME CONTEXT FROM WEB SEARCH:
+---
+{research_context}
+---
 
 Product: {product_name}
 
-=== RESEARCH CONTEXT ===
-{research_context}
-=== END CONTEXT ===
-
 Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors + step2_competitors + step3_competitors]}
 
-ONLY suggest competitors mentioned in research data. Do NOT guess.
+**STEP 4: Identify 2-3 OPEN-SOURCE or LOW-COST ALTERNATIVES**
+
+RULES:
+1. Focus on the PRECISE niche (not generic category)
+2. Select alternatives solving the EXACT same problem
+3. Maintain Internal vs External distinction
+4. Maintain B2B technical vs consumer distinction
+5. Base suggestions ONLY on research data above
+6. Explain WHY each is a functional alternative
 
 Return same JSON format.
 """
 
     messages4 = [
-        {"role": "system", "content": "You are an open-source software analyst. Only suggest alternatives found in research data."},
+        {"role": "system", "content": "You are a Market Research Expert analyzing open-source alternatives. CRITICAL: Identify PRECISE niche. Select alternatives solving EXACT same problem. Maintain Internal/External and B2B/consumer distinctions. Base ALL suggestions on research data only."},
         {"role": "user", "content": prompt_step4}
     ]
     
