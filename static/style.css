@@ -1,1030 +1,820 @@
 /* ============================================
-   APPLE-STYLE PREMIUM DESIGN SYSTEM
+   MICROSOFT FLUENT + APPLE TYPOGRAPHY HYBRID
+   Premium Design System
    ============================================ */
 
-/* Import SF Pro Display font (Apple's signature typeface) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* SF Pro Font Faces */
-@font-face {
-    font-family: 'SF Pro Display';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-regular-webfont.woff');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'SF Pro Display';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-medium-webfont.woff');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'SF Pro Display';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-semibold-webfont.woff');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'SF Pro Display';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscodisplay-bold-webfont.woff');
-    font-weight: 700;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'SF Pro Text';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscotext-regular-webfont.woff');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'SF Pro Text';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscotext-medium-webfont.woff');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'SF Pro Text';
-    src: url('https://applesocial.s3.amazonaws.com/assets/styles/fonts/sanfrancisco/sanfranciscotext-semibold-webfont.woff');
-    font-weight: 600;
-    font-style: normal;
-}
+/* Import Inter Font (Primary Typography) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    /* Apple Color Palette */
-    --apple-white: #ffffff;
-    --apple-off-white: #fbfbfd;
-    --apple-light-gray: #f5f5f7;
-    --apple-gray: #e8e8ed;
-    --apple-mid-gray: #d2d2d7;
-    --apple-dark-gray: #86868b;
-    --apple-text: #1d1d1f;
-    --apple-text-secondary: #6e6e73;
-    --apple-blue: #0071e3;
-    --apple-blue-hover: #0077ed;
-    --apple-blue-light: #e8f4fd;
-    --apple-green: #30d158;
-    --apple-red: #ff3b30;
-    --apple-orange: #ff9500;
+    /* Fluent Color Palette */
+    --fluent-blue: #0F6CBD;
+    --fluent-blue-hover: #115EA3;
+    --fluent-blue-pressed: #0F548C;
+    --fluent-blue-light: #EBF3FC;
     
-    /* Shadows */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.10);
-    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+    /* Neutral Colors */
+    --neutral-white: #FFFFFF;
+    --neutral-foreground-1: #242424;
+    --neutral-foreground-2: #424242;
+    --neutral-foreground-3: #616161;
+    --neutral-gray-10: #FAF9F8;
+    --neutral-gray-20: #F3F2F1;
+    --neutral-gray-30: #EDEBE9;
+    --neutral-gray-40: #E1DFDD;
+    --neutral-gray-50: #D2D0CE;
+    --neutral-gray-60: #C8C6C4;
     
-    /* Border Radius */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
+    /* Apple Typography Colors */
+    --text-primary: #1D1D1F;
+    --text-secondary: #6E6E73;
+    --text-tertiary: #86868B;
     
-    /* Spacing */
-    --space-xs: 8px;
-    --space-sm: 12px;
-    --space-md: 16px;
-    --space-lg: 24px;
-    --space-xl: 32px;
-    --space-2xl: 48px;
+    /* Semantic Colors */
+    --success-green: #107C10;
+    --warning-orange: #F7630C;
+    --error-red: #D13438;
+    
+    /* Shadows (Fluent Style - Subtle) */
+    --shadow-2: 0 0.3px 0.9px rgba(0, 0, 0, 0.07), 0 1.6px 3.6px rgba(0, 0, 0, 0.04);
+    --shadow-4: 0 0.6px 1.8px rgba(0, 0, 0, 0.07), 0 3.2px 7.2px rgba(0, 0, 0, 0.04);
+    --shadow-8: 0 1.2px 3.6px rgba(0, 0, 0, 0.09), 0 6.4px 14.4px rgba(0, 0, 0, 0.05);
+    --shadow-16: 0 2.4px 7.2px rgba(0, 0, 0, 0.11), 0 12.8px 28.8px rgba(0, 0, 0, 0.07);
+    
+    /* Border Radius (Fluent Style) */
+    --radius-small: 4px;
+    --radius-medium: 8px;
+    --radius-large: 12px;
+    --radius-xlarge: 16px;
+    
+    /* Spacing (Fluent Design Tokens) */
+    --spacing-xs: 4px;
+    --spacing-s: 8px;
+    --spacing-m: 12px;
+    --spacing-l: 16px;
+    --spacing-xl: 20px;
+    --spacing-xxl: 24px;
+    --spacing-xxxl: 32px;
+    --spacing-xxxxl: 48px;
 }
 
-/* Global Typography - SF Pro Style */
+/* ============================================
+   GLOBAL STYLES & TYPOGRAPHY
+   ============================================ */
+
+/* Global Typography - Inter with Apple polish */
 * {
-    font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
 }
 
-/* Ensure SF Pro is applied to all text elements */
-body, html {
-    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif !important;
+/* Body Background - Soft Gradient */
+body, .main, [data-testid="stAppViewContainer"] {
+    background: linear-gradient(180deg, #F6F7FB 0%, #ECEEF3 100%) !important;
+    min-height: 100vh;
 }
 
-/* Headings use SF Pro Display */
-h1, h2, h3, h4, h5, h6,
-.immersive-title,
-.immersive-subtitle {
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif !important;
-}
-
-/* Buttons use SF Pro Display */
-button,
-.stButton button,
-input[type="submit"] {
-    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif !important;
-}
-
-/* Input fields use SF Pro Text */
-input,
-textarea,
-select,
-.stTextInput input,
-.stTextArea textarea {
-    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif !important;
-}
-
-/* Streamlit specific overrides */
-.stMarkdown,
-.stMarkdown p,
-.stMarkdown span {
-    font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif !important;
-}
-
-/* Streamlit Container Override with VisionOS Background */
-.main {
-    background: linear-gradient(to bottom, #fafbfd 0%, #f0f2f5 100%);
-    padding: 0 !important;
-    position: relative;
-}
-
-.main::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 400px;
-    background: radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.03) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-}
-
-.block-container {
-    padding: 0 !important;
-    max-width: 900px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    position: relative;
-    z-index: 1;
-}
-
-/* Removed problematic rules that were breaking layout */
-
-[data-testid="stVerticalBlock"] > div:empty {
-    display: none !important;
-    height: 0 !important;
-    min-height: 0 !important;
-}
-
-/* Hide any empty divs between sections */
-.element-container:empty {
-    display: none !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Force centered layout */
-section.main > div {
-    max-width: 100%;
-    padding: 0;
-}
-
-/* Streamlit column layout override */
-.glass-container [data-testid="column"] {
-    padding: 0 !important;
-    margin: 0 !important;
-}
-
-/* Add gap between columns */
-.glass-container [data-testid="column"] + [data-testid="column"] {
-    margin-left: 24px !important;
-}
-
-/* Ensure proper flex behavior */
-.glass-container [data-testid="stHorizontalBlock"] {
-    display: flex;
-    gap: 24px;
-    width: 100%;
-}
-
-/* Button centering handled by global .stButton rule - no overrides needed */
-
-/* ============================================
-   VISIONOS-INSPIRED IMMERSIVE HEADER
-   ============================================ */
-.immersive-header {
-    background: radial-gradient(circle at 50% 0%, rgba(0, 113, 227, 0.05) 0%, transparent 60%), 
-                linear-gradient(180deg, #fafbfd 0%, #f5f7fa 100%);
-    text-align: center !important;
-    padding: 100px 48px 64px 48px;
-    margin: 0 !important;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.immersive-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.06) 50%, transparent 100%);
-}
-
-.immersive-title {
-    font-size: 64px;
-    font-weight: 700;
-    background: linear-gradient(135deg, #1d1d1f 0%, #4a4a4f 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -2px;
-    margin: 0 auto 20px auto !important;
-    line-height: 1.1;
-    text-align: center !important;
-    display: block;
-    width: 100%;
-}
-
-.immersive-subtitle {
-    font-size: 21px;
-    color: #6e6e73 !important;
-    font-weight: 400;
-    line-height: 1.6;
-    max-width: 680px;
+/* Main container spacing */
+.main .block-container {
+    padding-top: var(--spacing-xxxxl) !important;
+    padding-bottom: var(--spacing-xxxxl) !important;
+    max-width: 1000px !important;
     margin: 0 auto !important;
-    padding: 0 20px;
-    letter-spacing: -0.2px;
-    text-align: center !important;
-    display: block;
-    width: 100%;
 }
 
-/* ============================================
-   VISIONOS GLASSMORPHIC CONTAINER
-   ============================================ */
-.content-wrapper {
-    max-width: 800px;
-    margin: 0 auto !important;
-    padding: 40px 40px 80px 40px !important;
-    position: relative;
-    background: transparent !important;
-}
-
-/* Ensure content-wrapper follows header immediately */
-.immersive-header + .element-container {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: transparent !important;
-}
-
-/* Remove any auto-generated spacing/backgrounds */
+/* Remove default Streamlit spacing issues */
 .element-container {
-    background: transparent !important;
-}
-
-/* Glassmorphic Form Container */
-.glass-container {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 32px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-}
-
-.stButton > button {
-    display: inline-block !important;
-    margin: 0 auto !important;
-}
-
-/* Section Header inside Glass */
-.glass-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.glass-header h3 {
-    font-size: 28px;
-    font-weight: 600;
-    color: #1d1d1f;
-    letter-spacing: -0.6px;
-    margin-bottom: 12px;
-}
-
-.glass-header p {
-    font-size: 16px;
-    color: #6e6e73;
-    font-weight: 400;
-}
-
-/* Input Section Styling - Constrain width */
-.glass-container .stTextInput,
-.glass-container .stTextArea {
-    max-width: 100%;
-    margin-bottom: 24px;
-}
-
-/* Limit input box width for better aesthetics */
-.glass-container .stTextInput > div,
-.glass-container .stTextArea > div {
-    max-width: 100%;
-}
-
-.glass-container .stTextInput > div > div,
-.glass-container .stTextArea > div > div {
-    max-width: 100%;
-}
-
-/* Column containers with proper spacing - More aggressive */
-.glass-container [data-testid="column"] {
-    padding: 0 !important;
     margin: 0 !important;
-    flex: 1 1 0px;
-    min-width: 0;
-    max-width: 48% !important;
+    padding: 0 !important;
 }
 
-.glass-container [data-testid="stHorizontalBlock"] {
-    gap: 24px !important;
-    display: flex !important;
-    width: 100% !important;
+/* Typography Hierarchy - Apple Style */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+    margin: 0 !important;
+    text-align: center !important;
 }
 
-.glass-container [data-testid="stHorizontalBlock"] > div {
-    flex: 1 1 0px;
-    min-width: 0;
-    max-width: 48%;
+h1 {
+    font-size: 48px !important;
+    line-height: 1.1 !important;
+    letter-spacing: -0.03em !important;
 }
 
-.glass-container .element-container {
-    max-width: 100%;
+h2 {
+    font-size: 32px !important;
+    line-height: 1.2 !important;
+}
+
+h3 {
+    font-size: 24px !important;
+    line-height: 1.3 !important;
+}
+
+p, .stMarkdown p {
+    color: var(--text-secondary) !important;
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    font-weight: 400 !important;
 }
 
 /* ============================================
-   VISIONOS GLASSMORPHIC PILL BUTTON
+   HEADER SECTION
    ============================================ */
-.stButton>button {
-    background: linear-gradient(135deg, #34c759 0%, #28a745 100%);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 16px 40px;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 24px rgba(52, 199, 89, 0.25),
-                0 2px 8px rgba(52, 199, 89, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
+.fluent-header {
+    text-align: center !important;
+    padding: var(--spacing-xxxxl) var(--spacing-xxl) !important;
+    margin-bottom: var(--spacing-xxxl) !important;
+    background: transparent !important;
 }
 
-.stButton>button::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
-    border-radius: 50px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.fluent-header-title {
+    font-size: 56px !important;
+    font-weight: 800 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: -0.04em !important;
+    margin-bottom: var(--spacing-l) !important;
+    line-height: 1.05 !important;
 }
 
-.stButton>button:hover {
-    background: linear-gradient(135deg, #3dd15f 0%, #2fb84f 100%);
-    box-shadow: 0 12px 32px rgba(52, 199, 89, 0.35),
-                0 4px 16px rgba(52, 199, 89, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
+.fluent-header-subtitle {
+    font-size: 18px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    max-width: 640px !important;
+    margin: 0 auto !important;
 }
 
-.stButton>button:hover::before {
-    opacity: 1;
+/* ============================================
+   FLUENT CARD SYSTEM
+   ============================================ */
+.fluent-card {
+    background: var(--neutral-white) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
+    border-radius: var(--radius-large) !important;
+    padding: var(--spacing-xxxl) !important;
+    margin-bottom: var(--spacing-xxxl) !important;
+    box-shadow: var(--shadow-4) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-.stButton>button:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 16px rgba(52, 199, 89, 0.25),
-                0 1px 4px rgba(52, 199, 89, 0.15);
+.fluent-card:hover {
+    box-shadow: var(--shadow-8) !important;
+    border-color: var(--neutral-gray-50) !important;
 }
 
-/* Form Submit Button - GREEN (overrides Streamlit default) */
+.fluent-card-header {
+    text-align: center !important;
+    margin-bottom: var(--spacing-xxl) !important;
+}
+
+.fluent-card-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: var(--spacing-s) !important;
+}
+
+.fluent-card-description {
+    font-size: 14px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 400 !important;
+}
+
+/* ============================================
+   INPUT FIELDS (FLUENT STYLE)
+   ============================================ */
+.stTextInput > div > div > input,
+.stTextArea > div > div > textarea {
+    background: var(--neutral-white) !important;
+    border: 1px solid var(--neutral-gray-50) !important;
+    border-radius: var(--radius-medium) !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    color: var(--text-primary) !important;
+    transition: all 0.15s ease !important;
+    box-shadow: none !important;
+}
+
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus {
+    border-color: var(--fluent-blue) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px var(--fluent-blue) !important;
+}
+
+.stTextInput > div > div > input::placeholder,
+.stTextArea > div > div > textarea::placeholder {
+    color: var(--text-tertiary) !important;
+    font-weight: 400 !important;
+}
+
+/* Input Labels */
+.stTextInput > label,
+.stTextArea > label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: var(--spacing-s) !important;
+}
+
+.stTextInput,
+.stTextArea {
+    margin-bottom: var(--spacing-xl) !important;
+}
+
+/* Column layout for inputs */
+[data-testid="column"] {
+    padding: 0 var(--spacing-s) !important;
+}
+
+[data-testid="column"]:first-child {
+    padding-left: 0 !important;
+}
+
+[data-testid="column"]:last-child {
+    padding-right: 0 !important;
+}
+
+/* ============================================
+   BUTTON STYLES (FLUENT PRIMARY)
+   ============================================ */
+.stButton {
+    width: 100% !important;
+    text-align: center !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin: var(--spacing-xxl) 0 !important;
+}
+
+.stButton > button,
 button[kind="primary"],
 .stForm button[type="submit"],
 [data-testid="stFormSubmitButton"] button,
 .stFormSubmitButton button {
-    background: linear-gradient(135deg, #34c759 0%, #28a745 100%) !important;
-    color: white !important;
+    background: var(--fluent-blue) !important;
+    color: var(--neutral-white) !important;
     border: none !important;
-    border-radius: 50px !important;
-    padding: 16px 40px !important;
-    font-size: 16px !important;
+    border-radius: var(--radius-medium) !important;
+    padding: 12px 32px !important;
+    font-size: 15px !important;
     font-weight: 600 !important;
-    letter-spacing: -0.2px !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    box-shadow: 0 8px 24px rgba(52, 199, 89, 0.25),
-                0 2px 8px rgba(52, 199, 89, 0.15),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    letter-spacing: 0 !important;
+    box-shadow: var(--shadow-2) !important;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    margin: 0 auto !important;
+    min-width: 240px !important;
 }
 
+.stButton > button:hover,
 button[kind="primary"]:hover,
 .stForm button[type="submit"]:hover,
 [data-testid="stFormSubmitButton"] button:hover,
 .stFormSubmitButton button:hover {
-    background: linear-gradient(135deg, #3dd15f 0%, #2fb84f 100%) !important;
-    box-shadow: 0 12px 32px rgba(52, 199, 89, 0.35),
-                0 4px 16px rgba(52, 199, 89, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-    transform: translateY(-2px) !important;
+    background: var(--fluent-blue-hover) !important;
+    box-shadow: var(--shadow-4) !important;
+    transform: translateY(-1px) !important;
 }
 
+.stButton > button:active,
 button[kind="primary"]:active,
 .stForm button[type="submit"]:active,
 [data-testid="stFormSubmitButton"] button:active,
 .stFormSubmitButton button:active {
+    background: var(--fluent-blue-pressed) !important;
     transform: translateY(0) !important;
-    box-shadow: 0 4px 16px rgba(52, 199, 89, 0.25),
-                0 1px 4px rgba(52, 199, 89, 0.15) !important;
+    box-shadow: var(--shadow-2) !important;
 }
 
-/* Button centering - full width flex center */
-/* Removed .stButton rules that were breaking layout */
-
-/* ============================================
-   VISIONOS GLASSMORPHIC INPUT FIELDS
-   ============================================ */
-.glass-container .stTextInput>div>div>input,
-.glass-container .stTextArea>div>div>textarea {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 14px;
-    padding: 16px 18px;
-    font-size: 15px;
-    color: #1d1d1f;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box;
+/* Secondary Button (Clear Results) */
+.stButton > button[kind="secondary"] {
+    background: var(--neutral-white) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--neutral-gray-50) !important;
 }
 
-.glass-container .stTextInput>div>div>input:focus,
-.glass-container .stTextArea>div>div>textarea:focus {
-    background: rgba(255, 255, 255, 0.85);
-    border-color: rgba(0, 113, 227, 0.5);
-    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.12),
-                0 0 0 4px rgba(0, 113, 227, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    outline: none;
-    transform: translateY(-1px);
-}
-
-.glass-container .stTextInput>div>div>input::placeholder,
-.glass-container .stTextArea>div>div>textarea::placeholder {
-    color: #86868b;
-    opacity: 0.8;
-}
-
-/* Input labels - Bold and centered to box */
-.glass-container .stTextInput>label,
-.glass-container .stTextArea>label {
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #1d1d1f !important;
-    margin-bottom: 10px !important;
-    letter-spacing: -0.1px !important;
-    text-transform: none !important;
-    display: block !important;
-}
-
-/* Input container spacing */
-.glass-container .stTextInput,
-.glass-container .stTextArea {
-    margin-bottom: 24px;
+.stButton > button[kind="secondary"]:hover {
+    background: var(--neutral-gray-10) !important;
+    border-color: var(--neutral-gray-60) !important;
 }
 
 /* ============================================
-   COMPETITOR CARDS (Premium Apple Cards)
+   COMPETITOR CARDS (FLUENT STYLE)
    ============================================ */
 .competitor-card {
-    background: var(--apple-white);
-    border: 1px solid var(--apple-gray);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-md);
-    box-shadow: var(--shadow-card);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
+    background: var(--neutral-white) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
+    border-radius: var(--radius-large) !important;
+    padding: var(--spacing-xxl) !important;
+    margin-bottom: var(--spacing-xl) !important;
+    box-shadow: var(--shadow-2) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    hyphens: auto !important;
 }
 
 .competitor-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
-    border-color: var(--apple-mid-gray);
+    box-shadow: var(--shadow-8) !important;
+    transform: translateY(-2px) !important;
+    border-color: var(--neutral-gray-50) !important;
 }
 
 .competitor-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: var(--space-md);
-    gap: 16px;
-    flex-wrap: wrap;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: var(--spacing-l) !important;
+    gap: var(--spacing-l) !important;
+    flex-wrap: wrap !important;
 }
 
 .competitor-name {
-    font-size: 21px;
-    font-weight: 600;
-    color: var(--apple-text);
-    letter-spacing: -0.4px;
-    margin-bottom: 4px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: -0.01em !important;
+    margin-bottom: 4px !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
 }
 
 .competitor-product {
-    font-size: 15px;
-    color: var(--apple-text-secondary);
-    font-weight: 400;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
+    font-size: 14px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
+    max-width: 100% !important;
 }
 
 .market-share-badge {
-    background: var(--apple-blue-light);
-    color: var(--apple-blue);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
+    background: var(--fluent-blue-light) !important;
+    color: var(--fluent-blue) !important;
+    padding: 6px 12px !important;
+    border-radius: 16px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    white-space: nowrap !important;
+}
+
+.competitor-description {
+    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    margin: var(--spacing-l) 0 !important;
 }
 
 .competitor-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--space-md);
-    margin: var(--space-md) 0;
-    padding: var(--space-md) 0;
-    border-top: 1px solid var(--apple-light-gray);
-    border-bottom: 1px solid var(--apple-light-gray);
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+    gap: var(--spacing-l) !important;
+    margin: var(--spacing-l) 0 !important;
+    padding: var(--spacing-l) 0 !important;
+    border-top: 1px solid var(--neutral-gray-30) !important;
+    border-bottom: 1px solid var(--neutral-gray-30) !important;
 }
 
 .stat-item {
-    text-align: center;
+    text-align: center !important;
 }
 
 .stat-label {
-    font-size: 12px;
-    color: var(--apple-text-secondary);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
+    font-size: 11px !important;
+    color: var(--text-tertiary) !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 4px !important;
 }
 
 .stat-value {
-    font-size: 19px;
-    font-weight: 600;
-    color: var(--apple-text);
-    letter-spacing: -0.3px;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: -0.01em !important;
 }
 
 /* USP Badges */
 .usp-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: var(--space-md);
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: var(--spacing-s) !important;
+    margin-top: var(--spacing-l) !important;
 }
 
 .usp-badge {
-    background: var(--apple-light-gray);
-    color: var(--apple-text);
-    padding: 6px 12px;
-    border-radius: 16px;
-    font-size: 13px;
-    font-weight: 500;
+    background: var(--neutral-gray-20) !important;
+    color: var(--text-secondary) !important;
+    padding: 6px 12px !important;
+    border-radius: 12px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
 }
 
 .usp-badge.strength {
-    background: rgba(48, 209, 88, 0.1);
-    color: var(--apple-green);
+    background: rgba(16, 124, 16, 0.1) !important;
+    color: var(--success-green) !important;
 }
 
 .usp-badge.weakness {
-    background: rgba(255, 59, 48, 0.1);
-    color: var(--apple-red);
+    background: rgba(209, 52, 56, 0.1) !important;
+    color: var(--error-red) !important;
+}
+
+/* Competitor Website Link */
+.competitor-card a {
+    color: var(--fluent-blue) !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-top: var(--spacing-l) !important;
+}
+
+.competitor-card a:hover {
+    text-decoration: underline !important;
 }
 
 /* ============================================
-   ANALYTICS SECTION
+   SECTION HEADERS
+   ============================================ */
+.section-header {
+    text-align: center !important;
+    margin: var(--spacing-xxxxl) 0 var(--spacing-xxxl) 0 !important;
+}
+
+.section-title {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: var(--spacing-s) !important;
+}
+
+.section-subtitle {
+    font-size: 16px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 400 !important;
+}
+
+/* Remove section dividers (clean spacing instead) */
+.section-divider {
+    display: none !important;
+}
+
+/* ============================================
+   ANALYTICS & METRICS
    ============================================ */
 .analytics-container {
-    background: var(--apple-white);
-    border-radius: var(--radius-xl);
-    padding: var(--space-xl);
-    margin: var(--space-xl) 0;
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--apple-gray);
+    background: var(--neutral-white) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
+    border-radius: var(--radius-large) !important;
+    padding: var(--spacing-xxxl) !important;
+    margin: var(--spacing-xxxl) 0 !important;
+    box-shadow: var(--shadow-4) !important;
 }
 
 .analytics-header {
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--apple-text);
-    letter-spacing: -0.6px;
-    margin-bottom: var(--space-lg);
-    padding-bottom: var(--space-md);
-    border-bottom: 1px solid var(--apple-light-gray);
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: var(--spacing-xxl) !important;
+    text-align: center !important;
 }
 
 .analytics-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: var(--space-lg);
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: var(--spacing-xl) !important;
 }
 
 .metric-card {
-    background: var(--apple-off-white);
-    border: 1px solid var(--apple-gray);
-    border-radius: var(--radius-md);
-    padding: var(--space-lg);
-    text-align: center;
-    transition: all 0.2s ease;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
+    background: var(--neutral-gray-10) !important;
+    border: 1px solid var(--neutral-gray-30) !important;
+    border-radius: var(--radius-medium) !important;
+    padding: var(--spacing-xxl) !important;
+    text-align: center !important;
+    transition: all 0.2s ease !important;
+    word-wrap: break-word !important;
+    overflow-wrap: break-word !important;
 }
 
 .metric-card:hover {
-    background: var(--apple-white);
-    box-shadow: var(--shadow-sm);
+    background: var(--neutral-white) !important;
+    box-shadow: var(--shadow-4) !important;
+    transform: translateY(-2px) !important;
 }
 
 .metric-value {
-    font-size: 40px;
-    font-weight: 700;
-    color: var(--apple-text);
-    letter-spacing: -1px;
-    margin-bottom: 8px;
+    font-size: 36px !important;
+    font-weight: 800 !important;
+    color: var(--text-primary) !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: var(--spacing-s) !important;
 }
 
 .metric-label {
-    font-size: 14px;
-    color: var(--apple-text-secondary);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 13px !important;
+    color: var(--text-secondary) !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
 }
 
 /* ============================================
-   FEATURE MATRIX (Minimal Grid)
+   FEATURE MATRIX & TABLES
    ============================================ */
 .feature-matrix {
-    width: 100%;
-    overflow-x: auto;
-    background: var(--apple-white);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg);
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--apple-gray);
+    width: 100% !important;
+    overflow-x: auto !important;
+    background: var(--neutral-white) !important;
+    border-radius: var(--radius-large) !important;
+    padding: var(--spacing-xxl) !important;
+    box-shadow: var(--shadow-2) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
 }
 
 .feature-matrix table {
-    border-collapse: separate;
-    border-spacing: 0;
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
 }
 
 .feature-matrix th {
-    background: var(--apple-light-gray);
-    color: var(--apple-text);
-    font-weight: 600;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--apple-gray);
+    background: var(--neutral-gray-10) !important;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    font-size: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    padding: 12px 16px !important;
+    border-bottom: 2px solid var(--neutral-gray-40) !important;
+    text-align: left !important;
 }
 
 .feature-matrix td {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--apple-light-gray);
-    font-size: 15px;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid var(--neutral-gray-30) !important;
+    font-size: 14px !important;
+    color: var(--text-secondary) !important;
+}
+
+.feature-matrix tr:last-child td {
+    border-bottom: none !important;
 }
 
 /* ============================================
-   INSIGHT CARDS
+   INSIGHTS & DIFFERENTIATORS
    ============================================ */
-.differentiator-card {
-    background: var(--apple-white);
-    border: 1px solid var(--apple-gray);
-    border-left: 4px solid var(--apple-blue);
-    padding: var(--space-lg);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-md);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
+.differentiator-card,
+.insight-card {
+    background: var(--neutral-white) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
+    border-radius: var(--radius-large) !important;
+    padding: var(--spacing-xxl) !important;
+    margin-bottom: var(--spacing-l) !important;
+    box-shadow: var(--shadow-2) !important;
+    transition: all 0.2s ease !important;
 }
 
-.differentiator-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateX(4px);
+.differentiator-card:hover,
+.insight-card:hover {
+    box-shadow: var(--shadow-4) !important;
+    transform: translateY(-2px) !important;
 }
 
-.differentiator-card strong {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--apple-text);
-    letter-spacing: -0.3px;
-    display: block;
-    margin-bottom: 8px;
+.differentiator-title,
+.insight-title {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: var(--spacing-m) !important;
 }
 
-.recommendation-card {
-    background: var(--apple-white);
-    border: 1px solid var(--apple-gray);
-    border-left: 4px solid var(--apple-green);
-    padding: var(--space-lg);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-md);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
-}
-
-.recommendation-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateX(4px);
-}
-
-.recommendation-card strong {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--apple-text);
-    letter-spacing: -0.3px;
-    display: block;
-    margin-bottom: 8px;
-}
-
-.missing-capability-card {
-    background: var(--apple-white);
-    border: 1px solid var(--apple-gray);
-    border-left: 4px solid var(--apple-orange);
-    padding: var(--space-lg);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-md);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s ease;
-}
-
-.missing-capability-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateX(4px);
-}
-
-.missing-capability-card strong {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--apple-text);
-    letter-spacing: -0.3px;
-    display: block;
-    margin-bottom: 8px;
+.differentiator-description,
+.insight-description {
+    color: var(--text-secondary) !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
 }
 
 /* ============================================
-   INSIGHTS SUMMARY BOX
-   ============================================ */
-.insights-summary {
-    background: linear-gradient(135deg, var(--apple-blue) 0%, #005fc5 100%);
-    color: white;
-    border-radius: var(--radius-xl);
-    padding: var(--space-xl);
-    margin: var(--space-xl) 0;
-    box-shadow: var(--shadow-lg);
-}
-
-.insights-summary h3 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: var(--space-md);
-    letter-spacing: -0.5px;
-}
-
-.insights-summary p {
-    font-size: 16px;
-    line-height: 1.6;
-    opacity: 0.95;
-}
-
-/* ============================================
-   TABS (Apple Style)
-   ============================================ */
-.stTabs [data-baseweb="tab-list"] {
-    background: var(--apple-light-gray);
-    border-radius: var(--radius-md);
-    padding: 4px;
-    gap: 4px;
-}
-
-.stTabs [data-baseweb="tab"] {
-    background: transparent;
-    border-radius: var(--radius-sm);
-    color: var(--apple-text-secondary);
-    font-weight: 500;
-    font-size: 14px;
-    padding: 10px 16px;
-    transition: all 0.2s ease;
-}
-
-.stTabs [aria-selected="true"] {
-    background: var(--apple-white);
-    color: var(--apple-text);
-    box-shadow: var(--shadow-sm);
-}
-
-/* ============================================
-   EXPANDER (Collapsible Sections)
+   EXPANDERS (FLUENT ACCORDION STYLE)
    ============================================ */
 .streamlit-expanderHeader {
-    background: var(--apple-white);
-    border: 1px solid var(--apple-gray);
-    border-radius: var(--radius-md);
-    padding: var(--space-md) var(--space-lg);
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--apple-text);
-    transition: all 0.2s ease;
+    background: var(--neutral-white) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
+    border-radius: var(--radius-medium) !important;
+    padding: var(--spacing-l) !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+    font-size: 15px !important;
+    transition: all 0.15s ease !important;
 }
 
 .streamlit-expanderHeader:hover {
-    background: var(--apple-light-gray);
+    background: var(--neutral-gray-10) !important;
+    border-color: var(--neutral-gray-50) !important;
 }
 
 /* ============================================
-   AGENT LOG (Developer Console Style)
+   TABS (FLUENT STYLE)
    ============================================ */
-.agent-log {
-    background: var(--apple-text);
-    color: var(--apple-light-gray);
-    padding: var(--space-lg);
-    border-radius: var(--radius-md);
-    font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
-    font-size: 13px;
-    max-height: 400px;
-    overflow-y: auto;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
-    border: 1px solid #2d2d2d;
+.stTabs [data-baseweb="tab-list"] {
+    gap: 0 !important;
+    background: var(--neutral-white) !important;
+    border-radius: var(--radius-medium) !important;
+    padding: 4px !important;
+    border: 1px solid var(--neutral-gray-40) !important;
+}
+
+.stTabs [data-baseweb="tab"] {
+    background: transparent !important;
+    border: none !important;
+    color: var(--text-secondary) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    padding: 10px 20px !important;
+    border-radius: var(--radius-small) !important;
+    transition: all 0.15s ease !important;
+}
+
+.stTabs [data-baseweb="tab"]:hover {
+    background: var(--neutral-gray-10) !important;
+    color: var(--text-primary) !important;
+}
+
+.stTabs [aria-selected="true"] {
+    background: var(--fluent-blue) !important;
+    color: var(--neutral-white) !important;
 }
 
 /* ============================================
-   SECTION DIVIDERS
-   ============================================ */
-.section-divider {
-    height: 1px;
-    background: var(--apple-gray);
-    margin: var(--space-2xl) 0;
-    opacity: 0.5;
-}
-
-/* ============================================
-   SIDEBAR STYLING (Hidden for clean look)
+   SIDEBAR (HIDDEN FOR CLEAN LOOK)
    ============================================ */
 [data-testid="stSidebar"] {
-    display: none;
+    display: none !important;
 }
 
-/* Hide sidebar toggle button */
 [data-testid="collapsedControl"] {
-    display: none;
+    display: none !important;
 }
 
-/* Hide hamburger menu */
 button[kind="header"] {
-    display: none;
+    display: none !important;
 }
 
 /* ============================================
    DATAFRAME STYLING
    ============================================ */
 .stDataFrame {
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--apple-gray);
+    border-radius: var(--radius-medium) !important;
+    overflow: hidden !important;
+    box-shadow: var(--shadow-2) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
 }
 
 /* ============================================
-   SCROLLBAR (Apple Style)
+   SCROLLBAR (FLUENT STYLE)
    ============================================ */
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 12px !important;
+    height: 12px !important;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--apple-light-gray);
-    border-radius: 10px;
+    background: var(--neutral-gray-20) !important;
+    border-radius: 6px !important;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--apple-mid-gray);
-    border-radius: 10px;
-    border: 2px solid var(--apple-light-gray);
+    background: var(--neutral-gray-50) !important;
+    border-radius: 6px !important;
+    border: 2px solid var(--neutral-gray-20) !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--apple-dark-gray);
+    background: var(--neutral-gray-60) !important;
+}
+
+/* ============================================
+   AGENT LOG EXPANDER
+   ============================================ */
+.agent-log {
+    background: var(--neutral-gray-10) !important;
+    border: 1px solid var(--neutral-gray-30) !important;
+    border-radius: var(--radius-medium) !important;
+    padding: var(--spacing-l) !important;
+    margin-top: var(--spacing-xxl) !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 12px !important;
+    color: var(--text-secondary) !important;
 }
 
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
 @media (max-width: 768px) {
-    .content-wrapper {
-        padding: 0 20px 60px 20px;
-        max-width: 100%;
+    .main .block-container {
+        padding: var(--spacing-xxl) var(--spacing-l) !important;
     }
     
-    .glass-container {
-        padding: 40px 28px;
-        border-radius: 20px;
-        max-width: 100%;
+    .fluent-card {
+        padding: var(--spacing-xxl) var(--spacing-l) !important;
     }
     
-    .glass-container [data-testid="column"] {
-        max-width: 100% !important;
+    .fluent-header-title {
+        font-size: 40px !important;
     }
     
-    .immersive-header {
-        padding: 60px 20px 50px 20px;
-        margin-bottom: 40px;
-    }
-    
-    .immersive-title {
-        font-size: 40px;
-        letter-spacing: -1.2px;
-    }
-    
-    .immersive-subtitle {
-        font-size: 18px;
-    }
-    
-    .glass-header h3 {
-        font-size: 24px;
-    }
-    
-    .glass-header p {
-        font-size: 15px;
-    }
-    
-    .competitor-stats {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-    
-    .analytics-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
+    .fluent-header-subtitle {
+        font-size: 16px !important;
     }
     
     .competitor-header {
-        flex-direction: column;
-        gap: 12px;
+        flex-direction: column !important;
+        gap: var(--spacing-m) !important;
     }
     
     .market-share-badge {
-        width: fit-content;
+        width: fit-content !important;
     }
     
-    /* Stack columns on mobile */
-    .glass-container [data-testid="column"] {
-        width: 100% !important;
+    .competitor-stats {
+        grid-template-columns: 1fr !important;
+        gap: var(--spacing-m) !important;
+    }
+    
+    .analytics-grid {
+        grid-template-columns: 1fr !important;
+        gap: var(--spacing-l) !important;
+    }
+    
+    [data-testid="column"] {
         padding: 0 !important;
-        margin: 0 0 16px 0 !important;
+        margin-bottom: var(--spacing-l) !important;
     }
     
-    .glass-container [data-testid="column"] + [data-testid="column"] {
-        margin-left: 0 !important;
+    h1 {
+        font-size: 36px !important;
     }
     
-    .glass-container [data-testid="stHorizontalBlock"] {
-        flex-direction: column;
-        gap: 0;
+    h2 {
+        font-size: 28px !important;
     }
     
-    .stButton>button {
-        width: 100%;
-        padding: 14px 32px;
+    h3 {
+        font-size: 22px !important;
     }
+}
+
+/* ============================================
+   CLEAN UP EMPTY CONTAINERS
+   ============================================ */
+/* Remove empty divs and whitespace */
+.element-container:empty {
+    display: none !important;
+}
+
+[data-testid="stVerticalBlock"] > div:empty {
+    display: none !important;
+}
+
+/* Ensure consistent spacing between major sections */
+[data-testid="stVerticalBlock"] > div[data-testid="element-container"] {
+    margin-bottom: 0 !important;
+}
+
+/* Remove extra padding from form containers */
+.stForm {
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* ============================================
+   SUCCESS/ERROR MESSAGES (FLUENT STYLE)
+   ============================================ */
+.stAlert {
+    border-radius: var(--radius-medium) !important;
+    border: 1px solid var(--neutral-gray-40) !important;
+    padding: var(--spacing-l) !important;
+    box-shadow: var(--shadow-2) !important;
+}
+
+/* ============================================
+   SPINNER (FLUENT STYLE)
+   ============================================ */
+.stSpinner > div {
+    border-color: var(--fluent-blue) transparent transparent transparent !important;
 }

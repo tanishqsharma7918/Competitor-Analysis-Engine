@@ -60,20 +60,8 @@ st.set_page_config(
 with open(os.path.join("static", "style.css")) as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-# Center all Streamlit buttons
-st.markdown("""
-<style>
-.stButton > button {
-    display: block;
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
-.stButton {
-    width: 100%;
-    text-align: center !important;
-}
-</style>
-""", unsafe_allow_html=True)
+# Fluent UI button centering (handled in style.css)
+# No additional inline styles needed
 
 
 # -------------------------------------------------------
@@ -120,27 +108,25 @@ with st.sidebar:
 
 
 # -------------------------------------------------------
-# HEADER UI (APPLE STYLE - IMMERSIVE)
+# HEADER UI (FLUENT + APPLE HYBRID)
 # -------------------------------------------------------
 st.markdown("""
-<div class='immersive-header'>
-    <h1 class='immersive-title'>Competitor Analysis</h1>
-    <p class='immersive-subtitle'>Discover, analyze, and benchmark your competitive landscape with AI-powered insights</p>
+<div class='fluent-header'>
+    <h1 class='fluent-header-title'>Competitor Analysis</h1>
+    <p class='fluent-header-subtitle'>Discover, analyze, and benchmark your competitive landscape with AI-powered market intelligence</p>
 </div>
 """, unsafe_allow_html=True)
 
 # -----------------------------
-# PRODUCT INFORMATION SECTION
+# PRODUCT INFORMATION SECTION (FLUENT CARD)
 # -----------------------------
 st.markdown("""
-<div class='content-wrapper'>
-    <h3 style='text-align:center;'>📝 Product Information</h3>
-    <p style='text-align:center;'>Enter your product details to begin competitive analysis</p>
-</div>
+<div class='fluent-card'>
+    <div class='fluent-card-header'>
+        <h3 class='fluent-card-title'>📝 Product Information</h3>
+        <p class='fluent-card-description'>Enter your product details to begin competitive analysis</p>
+    </div>
 """, unsafe_allow_html=True)
-
-# GLASS CONTAINER (REAL one)
-st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
 
 with st.form("product_form"):   # <<<< THE FIX: Streamlit wraps correctly
     col1, col2 = st.columns(2)
@@ -166,10 +152,10 @@ with st.form("product_form"):   # <<<< THE FIX: Streamlit wraps correctly
     # Center button inside form
     submitted = st.form_submit_button(
         "🚀 Analyze Competitors",
-        use_container_width=True
+        use_container_width=False
     )
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("</div></div>", unsafe_allow_html=True)
 
 # Handle clear results button (outside form)
 if st.session_state.analysis_complete:
@@ -312,63 +298,53 @@ if st.session_state.analysis_complete and st.session_state.results:
     
     st.markdown("<div class='content-wrapper'>", unsafe_allow_html=True)
     st.markdown("""
-    <div style='text-align: center; margin: 64px 0 48px 0;'>
-        <h2 style='font-size: 40px; font-weight: 700; color: var(--apple-text); letter-spacing: -1px; margin-bottom: 12px;'>📊 Analysis Results</h2>
-        <p style='font-size: 17px; color: var(--apple-text-secondary);'>Comprehensive competitive intelligence for {}</p>
+    <div class='section-header'>
+        <h2 class='section-title'>📊 Analysis Results</h2>
+        <p class='section-subtitle'>Comprehensive competitive intelligence for {}</p>
     </div>
     """.format(results['product_name']), unsafe_allow_html=True)
 
     # ----------------------------
-    # MARKET OVERVIEW METRICS
+    # MARKET OVERVIEW METRICS (FLUENT CARD)
     # ----------------------------
     st.markdown("""
-    <h3 style='font-size: 28px; font-weight: 600; color: var(--apple-text); letter-spacing: -0.6px; margin: 48px 0 24px 0;'>📊 Market Overview</h3>
+    <div class='analytics-container'>
+        <h3 class='analytics-header'>📊 Market Overview</h3>
+        <div class='analytics-grid'>
     """, unsafe_allow_html=True)
     
-    col1, col2, col3, col4 = st.columns(4)
+    total_features = len(results['features'])
+    coverage = len([f for f in results['product_features'].values() if f]) / total_features * 100 if total_features > 0 else 0
+    categories = len(set(f.get('category', 'General') for f in results['features']))
     
-    with col1:
-        st.markdown("""
+    st.markdown("""
         <div class='metric-card'>
             <div class='metric-value'>{}</div>
             <div class='metric-label'>Competitors</div>
         </div>
-        """.format(len(results['competitors'])), unsafe_allow_html=True)
-    
-    with col2:
-        total_features = len(results['features'])
-        st.markdown("""
         <div class='metric-card'>
             <div class='metric-value'>{}</div>
             <div class='metric-label'>Features Tracked</div>
         </div>
-        """.format(total_features), unsafe_allow_html=True)
-    
-    with col3:
-        coverage = len([f for f in results['product_features'].values() if f]) / total_features * 100 if total_features > 0 else 0
-        st.markdown("""
         <div class='metric-card'>
             <div class='metric-value'>{}%</div>
             <div class='metric-label'>Coverage Rate</div>
         </div>
-        """.format(int(coverage)), unsafe_allow_html=True)
-    
-    with col4:
-        categories = len(set(f.get('category', 'General') for f in results['features']))
-        st.markdown("""
         <div class='metric-card'>
             <div class='metric-value'>{}</div>
             <div class='metric-label'>Categories</div>
         </div>
-        """.format(categories), unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
+        </div>
+    </div>
+    """.format(len(results['competitors']), total_features, int(coverage), categories), unsafe_allow_html=True)
 
     # ----------------------------
-    # COMPETITORS (PREMIUM CARDS)
+    # COMPETITORS (FLUENT CARDS)
     # ----------------------------
     st.markdown("""
-    <h3 style='font-size: 28px; font-weight: 600; color: var(--apple-text); letter-spacing: -0.6px; margin: 48px 0 24px 0;'>🏢 Competitor Landscape</h3>
+    <div class='section-header'>
+        <h3 class='section-title'>🏢 Competitor Landscape</h3>
+    </div>
     """, unsafe_allow_html=True)
     
     for i, comp in enumerate(results['competitors'], 1):
@@ -396,7 +372,7 @@ if st.session_state.analysis_complete and st.session_state.results:
             # Clean and validate URL
             if not website_url.startswith(('http://', 'https://')):
                 website_url = 'https://' + website_url
-            website_link = f"""<p style='margin-top: 16px;'><a href='{html.escape(website_url)}' target='_blank' style='color: var(--apple-blue); text-decoration: none; font-weight: 500;'>Visit Website →</a></p>"""
+            website_link = f"""<a href='{html.escape(website_url)}' target='_blank'>Visit Website →</a>"""
         
         competitor_html = f"""<div class='competitor-card'>
 <div class='competitor-header'>
@@ -406,7 +382,7 @@ if st.session_state.analysis_complete and st.session_state.results:
 </div>
 <div class='market-share-badge'>{market_share}% Market Share</div>
 </div>
-<p style='color: var(--apple-text-secondary); font-size: 15px; line-height: 1.6; margin: 16px 0;'>{description}</p>
+<p class='competitor-description'>{description}</p>
 <div class='competitor-stats'>
 <div class='stat-item'>
 <div class='stat-label'>Position</div>
@@ -432,10 +408,13 @@ if st.session_state.analysis_complete and st.session_state.results:
         st.markdown(competitor_html, unsafe_allow_html=True)
 
     # ----------------------------
-    # FEATURES
+    # FEATURES (FLUENT SECTION)
     # ----------------------------
-    st.markdown("---")
-    st.markdown("### 📋 Feature List")
+    st.markdown("""
+    <div class='section-header'>
+        <h3 class='section-title'>📋 Feature List</h3>
+    </div>
+    """, unsafe_allow_html=True)
 
     features_by_category = {}
     for feature in results['features']:
@@ -448,13 +427,13 @@ if st.session_state.analysis_complete and st.session_state.results:
                 st.markdown(f"- **{feature['feature_name']}**: {feature['description']}")
 
     # ----------------------------
-    # VISUAL ANALYTICS (PREMIUM SECTION)
+    # VISUAL ANALYTICS (FLUENT SECTION)
     # ----------------------------
-    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-    
     st.markdown("""
+    <div class='section-header'>
+        <h3 class='section-title'>📈 Visual Analytics & Trends</h3>
+    </div>
     <div class='analytics-container'>
-        <div class='analytics-header'>📈 Visual Analytics & Trends</div>
     """, unsafe_allow_html=True)
 
     tab1, tab2, tab3, tab4 = st.tabs([
@@ -517,20 +496,25 @@ if st.session_state.analysis_complete and st.session_state.results:
     st.markdown("</div>", unsafe_allow_html=True)
 
     # ----------------------------
-    # INSIGHTS SUMMARY BOX
+    # INSIGHTS SUMMARY (FLUENT CARD)
     # ----------------------------
     st.markdown("""
-    <div class='insights-summary'>
-        <h3>💡 Key Insights</h3>
-        <p>Based on comprehensive analysis of {} competitors across {} features, your product shows strong positioning in core capabilities with opportunities for strategic enhancement in emerging feature categories.</p>
+    <div class='fluent-card'>
+        <div class='fluent-card-header'>
+            <h3 class='fluent-card-title'>💡 Key Insights</h3>
+        </div>
+        <p style='color: var(--text-secondary); font-size: 15px; line-height: 1.6;'>Based on comprehensive analysis of {} competitors across {} features, your product shows strong positioning in core capabilities with opportunities for strategic enhancement in emerging feature categories.</p>
     </div>
     """.format(len(results['competitors']), len(results['features'])), unsafe_allow_html=True)
 
     # ----------------------------
-    # FEATURE MATRIX (PREMIUM TABLE)
+    # FEATURE MATRIX (FLUENT SECTION)
     # ----------------------------
-    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-    st.markdown("### 🎯 Feature Comparison Matrix")
+    st.markdown("""
+    <div class='section-header'>
+        <h3 class='section-title'>🎯 Feature Comparison Matrix</h3>
+    </div>
+    """, unsafe_allow_html=True)
 
     def highlight(val):
         if val == 1:
@@ -545,44 +529,53 @@ if st.session_state.analysis_complete and st.session_state.results:
     st.dataframe(styled_df, use_container_width=True, height=400)
 
     # ----------------------------
-    # DIFFERENTIATORS (PREMIUM CARDS)
+    # DIFFERENTIATORS (FLUENT SECTION)
     # ----------------------------
-    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-    st.markdown("### 💎 Key Differentiators")
+    st.markdown("""
+    <div class='section-header'>
+        <h3 class='section-title'>💎 Key Differentiators</h3>
+    </div>
+    """, unsafe_allow_html=True)
 
     diffs = results['analysis'].get("differentiators", [])
     if diffs:
         for i, d in enumerate(diffs, 1):
             diff_html = f"""<div class='differentiator-card'>
-    <strong>{i}. {d.get('title', 'Untitled')}</strong><br>
-    {d.get('description', 'No description available')}
+    <div class='differentiator-title'>{i}. {d.get('title', 'Untitled')}</div>
+    <div class='differentiator-description'>{d.get('description', 'No description available')}</div>
 </div>"""
             st.markdown(diff_html, unsafe_allow_html=True)
     else:
         st.info("No differentiators identified.")
 
     # ----------------------------
-    # RECOMMENDATIONS
+    # RECOMMENDATIONS (FLUENT SECTION)
     # ----------------------------
-    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-    st.markdown("### 💡 Strategic Recommendations")
+    st.markdown("""
+    <div class='section-header'>
+        <h3 class='section-title'>💡 Strategic Recommendations</h3>
+    </div>
+    """, unsafe_allow_html=True)
 
     recs = results['analysis'].get("recommendations", [])
     if recs:
         for i, r in enumerate(recs, 1):
-            rec_html = f"""<div class='recommendation-card'>
-    <strong>{i}. {r.get('title', 'Untitled')}</strong><br>
-    {r.get('description', 'No description available')}
+            rec_html = f"""<div class='insight-card'>
+    <div class='insight-title'>{i}. {r.get('title', 'Untitled')}</div>
+    <div class='insight-description'>{r.get('description', 'No description available')}</div>
 </div>"""
             st.markdown(rec_html, unsafe_allow_html=True)
     else:
         st.info("No recommendations available.")
 
     # ----------------------------
-    # MISSING CAPABILITIES
+    # MISSING CAPABILITIES (FLUENT SECTION)
     # ----------------------------
-    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-    st.markdown("### ⚠️ Missing Capabilities")
+    st.markdown("""
+    <div class='section-header'>
+        <h3 class='section-title'>⚠️ Missing Capabilities</h3>
+    </div>
+    """, unsafe_allow_html=True)
 
     missing = results['analysis'].get("missing_capabilities", [])
     if missing:
@@ -594,21 +587,23 @@ if st.session_state.analysis_complete and st.session_state.results:
                 "Low": "#44aa44"
             }.get(importance, "#666")
             
-            missing_html = f"""<div class='missing-capability-card'>
-    <strong>{i}. {m.get('capability', 'Unknown capability')}</strong>
-    <span style='color:{color}; font-weight:bold;'>({importance})</span><br>
-    {m.get('rationale', 'No rationale provided')}
+            missing_html = f"""<div class='insight-card'>
+    <div class='insight-title'>{i}. {m.get('capability', 'Unknown capability')} <span style='color:{color}; font-weight:600;'>({importance})</span></div>
+    <div class='insight-description'>{m.get('rationale', 'No rationale provided')}</div>
 </div>"""
             st.markdown(missing_html, unsafe_allow_html=True)
     else:
         st.success("No major missing capabilities identified!")
 
     # ----------------------------
-    # DOWNLOAD REPORTS
+    # DOWNLOAD REPORTS (FLUENT SECTION)
     # ----------------------------
-    st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
-    st.markdown("### 📥 Export Reports")
-    st.markdown("<p style='color: var(--apple-text-secondary); font-size: 15px; margin-bottom: 24px;'>Download comprehensive analysis reports in your preferred format</p>", unsafe_allow_html=True)
+    st.markdown("""
+    <div class='section-header'>
+        <h3 class='section-title'>📥 Export Reports</h3>
+        <p class='section-subtitle'>Download comprehensive analysis reports in your preferred format</p>
+    </div>
+    """, unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
@@ -652,17 +647,15 @@ if st.session_state.analysis_complete and st.session_state.results:
         except Exception as e:
             st.error(f"PPTX Error: {str(e)}")
     
-    st.markdown("</div>", unsafe_allow_html=True)
 
 
 # -------------------------------------------------------
-# FOOTER (APPLE STYLE)
+# FOOTER (FLUENT STYLE)
 # -------------------------------------------------------
-st.markdown("<div class='section-divider'></div>", unsafe_allow_html=True)
 st.markdown("""
-<div style='text-align:center; color: var(--apple-text-secondary); font-size: 14px; padding: 48px 0; background: var(--apple-white); border-radius: 16px; margin: 32px 48px;'>
-    <p style='margin-bottom: 8px; font-weight: 500;'>Powered by OpenAI GPT • Built with Streamlit</p>
-    <p style='font-size: 13px; color: var(--apple-dark-gray);'>Designed by Tanishq Sharma</p>
-    <p style='margin-top: 16px; font-size: 12px; color: var(--apple-dark-gray);'>© 2024 Competitor Analysis Engine. All rights reserved.</p>
+<div class='fluent-card' style='text-align:center; margin-top: 64px; margin-bottom: 32px;'>
+    <p style='margin-bottom: 8px; font-weight: 500; color: var(--text-secondary);'>Powered by OpenAI GPT-4o • Built with Streamlit</p>
+    <p style='font-size: 13px; color: var(--text-tertiary);'>Designed by Tanishq Sharma</p>
+    <p style='margin-top: 16px; font-size: 12px; color: var(--text-tertiary);'>© 2024 Competitor Analysis Engine. All rights reserved.</p>
 </div>
 """, unsafe_allow_html=True)
