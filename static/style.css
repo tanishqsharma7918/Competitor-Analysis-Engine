@@ -283,7 +283,7 @@ section.main > div {
    VISIONOS GLASSMORPHIC PILL BUTTON
    ============================================ */
 .stButton>button {
-    background: linear-gradient(135deg, #0071e3 0%, #005fc5 100%);
+    background: linear-gradient(135deg, #34c759 0%, #28a745 100%);
     color: white;
     border: none;
     border-radius: 50px;
@@ -292,8 +292,8 @@ section.main > div {
     font-weight: 600;
     letter-spacing: -0.2px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 24px rgba(0, 113, 227, 0.25),
-                0 2px 8px rgba(0, 113, 227, 0.15),
+    box-shadow: 0 8px 24px rgba(52, 199, 89, 0.25),
+                0 2px 8px rgba(52, 199, 89, 0.15),
                 inset 0 1px 0 rgba(255, 255, 255, 0.2);
     position: relative;
     overflow: hidden;
@@ -310,9 +310,9 @@ section.main > div {
 }
 
 .stButton>button:hover {
-    background: linear-gradient(135deg, #0077ed 0%, #0066d6 100%);
-    box-shadow: 0 12px 32px rgba(0, 113, 227, 0.35),
-                0 4px 16px rgba(0, 113, 227, 0.2),
+    background: linear-gradient(135deg, #3dd15f 0%, #2fb84f 100%);
+    box-shadow: 0 12px 32px rgba(52, 199, 89, 0.35),
+                0 4px 16px rgba(52, 199, 89, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
 }
@@ -323,8 +323,8 @@ section.main > div {
 
 .stButton>button:active {
     transform: translateY(0);
-    box-shadow: 0 4px 16px rgba(0, 113, 227, 0.25),
-                0 1px 4px rgba(0, 113, 227, 0.15);
+    box-shadow: 0 4px 16px rgba(52, 199, 89, 0.25),
+                0 1px 4px rgba(52, 199, 89, 0.15);
 }
 
 /* Button centering - full width flex center */
