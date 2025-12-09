@@ -348,9 +348,21 @@ if st.session_state.analysis_complete and st.session_state.results:
         market_share = max(5, 35 - (i * 5))  # Simulated decreasing share
         pricing_tier = "Premium" if i <= 2 else "Mid-Tier" if i <= 4 else "Budget"
         weakness_badge = "<span class='usp-badge weakness'>⚠️ Complex UI</span>" if i > 2 else ""
-        website_link = f"<p style='margin-top: 16px;'><a href='{comp.get('website', '')}' target='_blank' style='color: var(--apple-blue); text-decoration: none; font-weight: 500;'>Visit Website →</a></p>" if comp.get('website') else ""
         
-        competitor_html = f"""<div class='competitor-card'>
+        # Build website link HTML (inside the card)
+        website_link = ""
+        if comp.get('website'):
+            website_link = f"""
+        <p style='margin-top: 16px;'>
+            <a href='{comp.get('website')}' target='_blank'
+               style='color: var(--apple-blue); text-decoration: none; font-weight: 500;'>
+               Visit Website →
+            </a>
+        </p>
+    """
+        
+        competitor_html = f"""
+<div class='competitor-card'>
     <div class='competitor-header'>
         <div>
             <div class='competitor-name'>{comp.get('company_name', 'Unknown')}</div>
@@ -358,9 +370,11 @@ if st.session_state.analysis_complete and st.session_state.results:
         </div>
         <div class='market-share-badge'>{market_share}% Market Share</div>
     </div>
+
     <p style='color: var(--apple-text-secondary); font-size: 15px; line-height: 1.6; margin: 16px 0;'>
         {comp.get('description', 'No description available')}
     </p>
+
     <div class='competitor-stats'>
         <div class='stat-item'>
             <div class='stat-label'>Position</div>
@@ -375,13 +389,17 @@ if st.session_state.analysis_complete and st.session_state.results:
             <div class='stat-value'>Active</div>
         </div>
     </div>
+
     <div class='usp-badges'>
         <span class='usp-badge strength'>🎯 Key Strength: Feature Rich</span>
         <span class='usp-badge'>💼 Enterprise Focus</span>
         {weakness_badge}
     </div>
+
     {website_link}
-</div>"""
+
+</div>
+"""
         st.markdown(competitor_html, unsafe_allow_html=True)
 
     # ----------------------------
