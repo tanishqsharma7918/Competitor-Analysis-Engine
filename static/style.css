@@ -522,6 +522,9 @@ button[kind="primary"]:active,
     margin-bottom: var(--space-md);
     box-shadow: var(--shadow-card);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .competitor-card:hover {
@@ -535,6 +538,8 @@ button[kind="primary"]:active,
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: var(--space-md);
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
 .competitor-name {
@@ -543,12 +548,18 @@ button[kind="primary"]:active,
     color: var(--apple-text);
     letter-spacing: -0.4px;
     margin-bottom: 4px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .competitor-product {
     font-size: 15px;
     color: var(--apple-text-secondary);
     font-weight: 400;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .market-share-badge {
@@ -653,6 +664,8 @@ button[kind="primary"]:active,
     padding: var(--space-lg);
     text-align: center;
     transition: all 0.2s ease;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .metric-card:hover {
@@ -977,10 +990,21 @@ button[kind="header"] {
     
     .competitor-stats {
         grid-template-columns: 1fr;
+        gap: 12px;
     }
     
     .analytics-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .competitor-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .market-share-badge {
+        width: fit-content;
     }
     
     /* Stack columns on mobile */

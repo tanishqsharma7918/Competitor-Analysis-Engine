@@ -70,14 +70,14 @@ Analyze the product '{product_name}' by '{company_name}' (Description: {descript
 
 1. **Identify the Precise Niche:** Define the specific market category (e.g., if it's 'Medical Device Security', do NOT just say 'Healthcare').
 
-2. **Select 3-5 Direct Competitors:**
+2. **Select 5-8 Direct Competitors:**
    - Look for companies that solve the *exact same problem* for the *exact same customer*.
    - **Guardrail:** If the product is a technical B2B tool (like 'External Threat Intel'), DO NOT suggest generic consumer apps or internal compliance checklists.
    - **Guardrail:** If the product is 'Internal' (installable), do not suggest 'External' (SaaS scanning) tools unless they are the primary alternative.
 
 3. **Explain Your Reasoning:** For each competitor, explain *why* it is a functional alternative based on the search data.
 
-**STEP 1: Identify 3-5 WELL-KNOWN, MARKET-LEADING competitors.**
+**STEP 1: Identify 5-8 WELL-KNOWN, MARKET-LEADING competitors.**
 
 For each competitor, provide:
 - company_name
@@ -136,7 +136,7 @@ Category: {description}
 
 Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors]}
 
-**STEP 2: Identify 2-3 NICHE or SMALLER competitors**
+**STEP 2: Identify 4-6 NICHE or SMALLER competitors**
 
 RULES:
 1. Focus on the PRECISE niche (not generic category)
@@ -174,7 +174,7 @@ Product: {product_name}
 
 Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors + step2_competitors]}
 
-**STEP 3: Identify 2-3 EMERGING STARTUPS or NEW ENTRANTS**
+**STEP 3: Identify 3-5 EMERGING STARTUPS or NEW ENTRANTS**
 
 RULES:
 1. Focus on the PRECISE niche (not generic category)
@@ -212,7 +212,7 @@ Product: {product_name}
 
 Already found: {[c.get('company_name', 'Unknown') for c in step1_competitors + step2_competitors + step3_competitors]}
 
-**STEP 4: Identify 2-3 OPEN-SOURCE or LOW-COST ALTERNATIVES**
+**STEP 4: Identify 3-5 OPEN-SOURCE or LOW-COST ALTERNATIVES**
 
 RULES:
 1. Focus on the PRECISE niche (not generic category)

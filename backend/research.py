@@ -52,7 +52,7 @@ def perform_research(
     primary_results = []
     try:
         with DDGS() as ddgs:
-            primary_results = list(ddgs.text(primary_query, max_results=10))
+            primary_results = list(ddgs.text(primary_query, max_results=15))
     except Exception as e:
         if logger:
             logger.log_observation(f"⚠ Primary search error: {str(e)}")
@@ -63,7 +63,7 @@ def perform_research(
     company_name_count = 0
     
     if primary_results and isinstance(primary_results, list):
-        for i, result in enumerate(primary_results[:10], 1):
+        for i, result in enumerate(primary_results[:15], 1):
             if not isinstance(result, dict):
                 continue
             
@@ -115,12 +115,12 @@ def perform_research(
         
         try:
             with DDGS() as ddgs:
-                fallback_results = list(ddgs.text(fallback_query, max_results=10))
+                fallback_results = list(ddgs.text(fallback_query, max_results=15))
             
             if fallback_results and isinstance(fallback_results, list):
                 fallback_summary = "\n=== ADDITIONAL MARKET CATEGORY SEARCH ===\n\n"
                 
-                for i, result in enumerate(fallback_results[:10], 1):
+                for i, result in enumerate(fallback_results[:15], 1):
                     if not isinstance(result, dict):
                         continue
                     
