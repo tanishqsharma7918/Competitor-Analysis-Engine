@@ -23,16 +23,15 @@ def _feature_cache_key(product_name: str, description: str, competitor_names: Li
 @st.cache_data(show_spinner=False)
 def _cached_llm_feature_call(messages_tuple: tuple) -> Dict[str, Any]:
     """
-    Streamlit requires cache functions to be sync.
-    So we run the async LLM call inside asyncio.run().
+    Streamlit cache wrapper using GPT-4o for enhanced feature extraction.
     """
     messages = [{"role": r, "content": c} for r, c in messages_tuple]
-    result = asyncio.run(call_openai_json_async(messages, model="gpt-4o-mini"))
+    result = asyncio.run(call_openai_json_async(messages, model="gpt-4o"))
     return result
 
 
 # ---------------------------------------------------------
-# ASYNC FEATURE EXTRACTION
+# ASYNC FEATURE EXTRACTION (UPGRADED TO GPT-4o)
 # ---------------------------------------------------------
 async def extract_features(
     product_name: str,
@@ -41,16 +40,19 @@ async def extract_features(
     logger: AgentLogger = None,
     use_cache: bool = True
 ) -> Dict[str, Any]:
+    """
+    Enhanced feature extraction using GPT-4o with:
+    - Deeper feature analysis
+    - Importance scoring
+    - Competitive relevance scoring
+    - Category classification
+    """
 
-    # ------------------------------------------
     # 1. Build stable cache key
-    # ------------------------------------------
     competitor_names = [c.get("product_name", "") for c in competitors]
     cache_key = _feature_cache_key(product_name, description, competitor_names)
 
-    # ------------------------------------------
-    # 2. Check local (persistent) cache
-    # ------------------------------------------
+    # 2. Check cache
     if use_cache:
         cached = get_cached_features(product_name)
         if cached:
@@ -59,22 +61,22 @@ async def extract_features(
                 logger.log_observation(f"{len(cached['features'])} features pulled from cache.")
             return cached
 
-    # ------------------------------------------
-    # 3. Prepare LLM prompt
-    # ------------------------------------------
+    # 3. Prepare enhanced LLM prompt
     if logger:
-        logger.log_thought("Extracting features via LLM...")
-        logger.log_action(f"Analyzing product: {product_name} and {len(competitors)} competitors.")
+        logger.log_thought("🔬 Extracting features with GPT-4o deep reasoning...")
+        logger.log_action(f"Analyzing {product_name} and {len(competitors)} competitors.")
 
-    competitor_list = "\n".join(
-        [
-            f"- {c.get('company_name', 'Unknown')}: {c.get('product_name', 'Unknown')} - {c.get('description', '')}"
-            for c in competitors
-        ]
-    )
+    competitor_list = "\n".join([
+        f"- {c.get('company_name', 'Unknown')}: {c.get('product_name', 'Unknown')}\n"
+        f"  Description: {c.get('description', '')}\n"
+        f"  Category: {c.get('product_category', '')}\n"
+        f"  Strengths: {c.get('key_strengths', '')}\n"
+        f"  Target: {c.get('target_audience', '')}"
+        for c in competitors
+    ])
 
     prompt = f"""
-You are a senior product analyst. Read the following:
+You are a senior product analyst with deep expertise in competitive feature analysis.
 
 Main Product: {product_name}
 Description: {description}
@@ -82,21 +84,34 @@ Description: {description}
 Competitors:
 {competitor_list}
 
-Your tasks:
-1. Identify EXACTLY 7 key features important for comparison across all these products.
-2. Each feature must include:
-   - feature_name
-   - description
-   - category (e.g., Core Functionality, Integrations, Pricing, Support, UX, etc.)
-3. For each product, list which features they have.
+**Tasks:**
 
-Return ONLY JSON in this exact format:
+1. Identify EXACTLY 10 key features that are critical for comparison across all these products.
+
+2. For each feature, provide:
+   - feature_name (clear, specific name)
+   - description (detailed 2-sentence explanation)
+   - category (choose from: Core Functionality, Integrations, Analytics, Collaboration, Security, Pricing, Support, UX/Design, Mobile, API/Developer)
+   - importance_score (1-5, where 5 = critical for market success)
+   - competitive_relevance_score (1-5, where 5 = key differentiator in this market)
+
+3. For each product (main + competitors), list which features they have.
+
+**Important:** Use deep reasoning to identify features that:
+- Are genuinely important for users
+- Differentiate competitors from each other
+- Reflect real market dynamics
+- Are verifiable and not hallucinated
+
+Return ONLY JSON in this EXACT format:
 {{
     "features": [
         {{
             "feature_name": "...",
             "description": "...",
-            "category": "..."
+            "category": "...",
+            "importance_score": 4,
+            "competitive_relevance_score": 5
         }}
     ],
     "product_features": {{
@@ -105,22 +120,27 @@ Return ONLY JSON in this exact format:
         ...
     }}
 }}
-    """
+"""
 
     messages = [
-        {"role": "system", "content": "You are an expert product feature analyst."},
+        {"role": "system", "content": "You are an expert product feature analyst with deep market knowledge and factual accuracy."},
         {"role": "user", "content": prompt}
     ]
 
     messages_tuple = tuple((m["role"], m["content"]) for m in messages)
 
-    # ------------------------------------------
-    # 4. Call the cached LLM wrapper
-    # ------------------------------------------
+    # 4. Call GPT-4o
     try:
-        json_str = _cached_llm_feature_call(messages_tuple)
-        features = json_str.get("features", [])
-        product_features = json_str.get("product_features", {})
+        json_result = _cached_llm_feature_call(messages_tuple)
+        features = json_result.get("features", [])
+        product_features = json_result.get("product_features", {})
+
+        # Validate importance and relevance scores
+        for feature in features:
+            if "importance_score" not in feature:
+                feature["importance_score"] = 3
+            if "competitive_relevance_score" not in feature:
+                feature["competitive_relevance_score"] = 3
 
     except Exception as e:
         if logger:
@@ -132,17 +152,24 @@ Return ONLY JSON in this exact format:
         "product_features": product_features,
     }
 
-    # ------------------------------------------
-    # 5. Save to local persistent cache
-    # ------------------------------------------
+    # 5. Cache results
     if use_cache:
         cache_features(product_name, features, product_features)
 
-    # ------------------------------------------
-    # 6. Logging
-    # ------------------------------------------
+    # 6. Enhanced logging
     if logger:
-        logger.log_observation(f"{len(features)} features extracted.")
-        logger.log_observation(f"Feature coverage computed for {len(product_features)} products.")
+        logger.log_observation(f"✅ Extracted {len(features)} high-quality features")
+        
+        # Log top features by importance
+        sorted_features = sorted(features, key=lambda x: x.get("importance_score", 0), reverse=True)
+        logger.log_observation("🔝 Top 3 critical features:")
+        for feat in sorted_features[:3]:
+            logger.log_observation(
+                f"  • {feat['feature_name']} "
+                f"(Importance: {feat.get('importance_score', 0)}/5, "
+                f"Competitive Relevance: {feat.get('competitive_relevance_score', 0)}/5)"
+            )
+        
+        logger.log_observation(f"📊 Feature coverage computed for {len(product_features)} products")
 
     return feature_data
