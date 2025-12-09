@@ -4,7 +4,7 @@ Prevents LLM hallucinations by grounding prompts in live market data.
 """
 
 from typing import List, Dict, Any
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 from backend.llm import AgentLogger
 
 
@@ -40,9 +40,9 @@ def perform_research(
         logger.log_action(f"Searching: '{search_query}'")
     
     try:
-        # Perform web search
-        ddgs = DDGS()
-        results = ddgs.text(search_query, max_results=10)
+        # Perform web search with proper resource cleanup
+        with DDGS() as ddgs:
+            results = list(ddgs.text(search_query, max_results=10))
         
         if not results or not isinstance(results, list):
             if logger:
@@ -103,8 +103,8 @@ def perform_category_research(
     search_query = f"{product_name} {category} competitors market analysis"
     
     try:
-        ddgs = DDGS()
-        results = ddgs.text(search_query, max_results=5)
+        with DDGS() as ddgs:
+            results = list(ddgs.text(search_query, max_results=5))
         
         if not results:
             return f"No {category} category data found."
@@ -112,6 +112,8 @@ def perform_category_research(
         research_summary = f"=== {category.upper()} CATEGORY RESEARCH ===\n\n"
         
         for i, result in enumerate(results, 1):
+            if not isinstance(result, dict):
+                continue
             title = result.get('title', 'Untitled')
             snippet = result.get('body', 'No description')
             research_summary += f"{i}. {title}\n   {snippet}\n\n"
@@ -150,8 +152,8 @@ def verify_competitor_exists(
     search_query = f"{company_name} {product_name} official website"
     
     try:
-        ddgs = DDGS()
-        results = ddgs.text(search_query, max_results=3)
+        with DDGS() as ddgs:
+            results = list(ddgs.text(search_query, max_results=3))
         
         if not results:
             if logger:
@@ -163,7 +165,7 @@ def verify_competitor_exists(
             }
         
         # Check if results mention the company/product
-        evidence_text = " ".join([r.get('body', '') for r in results[:3]])
+        evidence_text = " ".join([r.get('body', '') for r in results[:3] if isinstance(r, dict)])
         
         if company_name.lower() in evidence_text.lower():
             if logger:
