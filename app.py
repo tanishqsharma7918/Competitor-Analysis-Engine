@@ -128,48 +128,46 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-<div class='content-wrapper'>
-    <h3 style='text-align:center;'>📝 Product Information</h3>
-    <p style='text-align:center;'>Enter your product details to begin competitive analysis</p>
-<div class='glass-container'>
-""", unsafe_allow_html=True)
-
-col1, col2 = st.columns(2)
-
-with col1:
-    product_name = st.text_input(
-        "Product Name *", 
-        placeholder="Slack, Notion, Salesforce"
+with st.container():
+    st.markdown("""
+    <div class='content-wrapper'>
+        <h3 style='text-align:center;'>📝 Product Information</h3>
+        <p style='text-align:center;'>Enter your product details to begin competitive analysis</p>
+    </div>
+    <div class='glass-container'>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        product_name = st.text_input(
+            "Product Name *", 
+            placeholder="Slack, Notion, Salesforce"
+        )
+    
+    with col2:
+        company_name = st.text_input(
+            "Company Name (Optional)",
+            placeholder="e.g., Acme Corporation"
+        )
+    
+    product_description = st.text_area(
+        "Product Description (Optional)",
+        placeholder="Describe your product..."
     )
-
-with col2:
-    company_name = st.text_input(
-        "Company Name (Optional)",
-        placeholder="e.g., Acme Corporation"
-    )
-
-product_description = st.text_area(
-    "Product Description (Optional)",
-    placeholder="Describe your product..."
-)
-
-# BUTTON MUST BE INSIDE THIS CONTAINER
-analyze_button = st.button("🚀 Analyze Competitors")
-
-if st.session_state.analysis_complete:
-    clear_button = st.button("🔄 Clear Results")
-    if clear_button:
-        st.session_state.analysis_complete = False
-        st.session_state.results = {}
-        st.session_state.logger = None
-        st.rerun()
-
-# Correct closing tags
-st.markdown("""
-</div>   <!-- close glass -->
-</div>       <!-- close wrapper -->
-""", unsafe_allow_html=True)
+    
+    # BUTTON MUST BE INSIDE THIS CONTAINER
+    analyze_button = st.button("🚀 Analyze Competitors")
+    
+    if st.session_state.analysis_complete:
+        clear_button = st.button("🔄 Clear Results")
+        if clear_button:
+            st.session_state.analysis_complete = False
+            st.session_state.results = {}
+            st.session_state.logger = None
+            st.rerun()
+    
+    st.markdown("</div>", unsafe_allow_html=True)  # Close glass-container
 
 
 # -------------------------------------------------------
