@@ -128,14 +128,18 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# ----- FIXED HEADER + FORM WRAPPER (NO EMPTY WHITE BOXES) -----
 st.markdown("""
 <div class='content-wrapper'>
     <h3 style='font-size: 24px; font-weight: 600; color: #1d1d1f; margin-bottom: 8px; text-align: center;'>📝 Product Information</h3>
     <p style='font-size: 16px; color: #6e6e73; margin-bottom: 32px; text-align: center;'>Enter your product details to begin competitive analysis</p>
+
     <div class='glass-container'>
 """, unsafe_allow_html=True)
 
+# ------ FORM INPUTS INSIDE SAME GLASS CONTAINER ------
 col1, col2 = st.columns(2, gap="large")
+
 with col1:
     product_name = st.text_input(
         "Product Name *",
@@ -143,6 +147,7 @@ with col1:
         help="Enter the name of your product or the product you want to analyze",
         key="product_name"
     )
+
 with col2:
     company_name = st.text_input(
         "Company Name (Optional)",
@@ -150,6 +155,7 @@ with col2:
         help="Enter your company name if applicable",
         key="company_name"
     )
+
 product_description = st.text_area(
     "Product Description (Optional)",
     placeholder="Briefly describe what your product does, its key value proposition, and target market...",
@@ -158,9 +164,9 @@ product_description = st.text_area(
     key="product_description"
 )
 
-# Centered button inside glass-container
-st.markdown("<br>", unsafe_allow_html=True)
-analyze_button = st.button("🚀 Analyze Competitors", type="primary")
+# ------ BUTTON INSIDE SAME GLASS CONTAINER (NOW CENTERS CORRECTLY) ------
+st.write("")  # small spacing
+analyze_button = st.button("🚀 Analyze Competitors")
 
 if st.session_state.analysis_complete:
     clear_button = st.button("🔄 Clear Results")
@@ -170,8 +176,11 @@ if st.session_state.analysis_complete:
         st.session_state.logger = None
         st.rerun()
 
-# Close glass-container and content-wrapper
-st.markdown("</div></div>", unsafe_allow_html=True)
+# ------ CLOSE GLASS-CONTAINER AND CONTENT-WRAPPER ------
+st.markdown("""
+    </div>  <!-- close glass-container -->
+</div>      <!-- close content-wrapper -->
+""", unsafe_allow_html=True)
 
 
 # -------------------------------------------------------
