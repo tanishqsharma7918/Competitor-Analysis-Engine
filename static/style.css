@@ -895,9 +895,9 @@ p {
     }
 }
 
-/* FIX FOR FORM SUBMIT BUTTON */
-button[kind="formSubmit"] {
-    background: #22C55E !important;   /* Green */
+/* REAL FIX — Streamlit 2025 Form Submit Button */
+[data-testid="baseButton-secondary"] {
+    background: #22C55E !important;
     color: white !important;
     border: none !important;
     padding: 14px 32px !important;
@@ -906,14 +906,24 @@ button[kind="formSubmit"] {
     border-radius: 12px !important;
     cursor: pointer !important;
     box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35) !important;
-    display: block !important;
     margin-left: auto !important;
     margin-right: auto !important;
+    display: block !important;
     transition: 0.2s ease !important;
 }
 
-button[kind="formSubmit"]:hover {
-    background: #16A34A !important; /* darker green */
+[data-testid="baseButton-secondary"]:hover {
+    background: #16A34A !important;
     transform: translateY(-2px) !important;
     box-shadow: 0 8px 24px rgba(34, 197, 94, 0.45) !important;
+}
+
+[data-testid="baseButton-secondary"]:active {
+    background: #15803D !important;
+}
+
+/* Ensure form submit button container centers */
+.stForm .stButton {
+    display: flex !important;
+    justify-content: center !important;
 }
