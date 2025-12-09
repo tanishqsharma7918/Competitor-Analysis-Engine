@@ -149,11 +149,13 @@ with st.form("product_form"):   # <<<< THE FIX: Streamlit wraps correctly
         height=120
     )
 
-    # Center button inside form
-    submitted = st.form_submit_button(
-        "🚀 Analyze Competitors",
-        use_container_width=False
-    )
+    # Center button manually + force CSS class
+    submit_col = st.columns([1,2,1])
+    with submit_col[1]:
+        submitted = st.form_submit_button(
+            "🚀 Analyze Competitors",
+            help="Run competitor analysis now"
+        )
 
 st.markdown("</div></div>", unsafe_allow_html=True)
 
