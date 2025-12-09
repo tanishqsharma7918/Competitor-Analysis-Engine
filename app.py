@@ -281,8 +281,16 @@ if analyze_button:
             st.success("✅ Analysis complete!")
 
         except Exception as e:
+            import traceback
+            error_details = traceback.format_exc()
             st.error(f"❌ An error occurred during analysis: {str(e)}")
-            st.session_state.logger.log_observation(f"Fatal error: {str(e)}")
+            if st.session_state.logger:
+                st.session_state.logger.log_observation(f"Fatal error: {str(e)}")
+                st.session_state.logger.log_observation(f"Traceback: {error_details}")
+            
+            # Show detailed error in expander
+            with st.expander("🔍 Error Details", expanded=False):
+                st.code(error_details)
 # -------------------------------------------------------
 # DEBUG LOGS (UNCHANGED)
 # -------------------------------------------------------

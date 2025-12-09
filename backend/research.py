@@ -44,15 +44,18 @@ def perform_research(
         ddgs = DDGS()
         results = ddgs.text(search_query, max_results=10)
         
-        if not results:
+        if not results or not isinstance(results, list):
             if logger:
                 logger.log_observation("⚠ No search results found - falling back to LLM knowledge")
-            return "No live market data available. Proceed with caution."
+            return ""  # Return empty string to proceed with LLM knowledge only
         
         # Format research summary
         research_summary = "=== LIVE MARKET RESEARCH DATA ===\n\n"
         
         for i, result in enumerate(results[:10], 1):
+            if not isinstance(result, dict):
+                continue
+            
             title = result.get('title', 'Untitled')
             snippet = result.get('body', 'No description')
             url = result.get('href', '')
@@ -73,7 +76,8 @@ def perform_research(
         if logger:
             logger.log_observation(error_msg)
         
-        return f"Research failed: {str(e)}. Proceeding with LLM knowledge only."
+        # Return empty string to gracefully fallback to LLM knowledge
+        return ""
 
 
 def perform_category_research(
