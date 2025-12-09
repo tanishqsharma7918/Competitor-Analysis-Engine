@@ -78,19 +78,7 @@
     z-index: 1;
 }
 
-/* Remove any default Streamlit blocks that create white boxes */
-.block-container > div,
-.block-container > .element-container {
-    background: transparent !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Aggressively remove vertical gaps and empty containers */
-[data-testid="stVerticalBlock"] {
-    gap: 0 !important;
-    margin: 0 !important;
-}
+/* Removed problematic rules that were breaking layout */
 
 [data-testid="stVerticalBlock"] > div:empty {
     display: none !important;
@@ -340,15 +328,7 @@ section.main > div {
 }
 
 /* Button centering - full width flex center */
-.stButton {
-    width: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-}
-.stButton > button {
-    margin-left: auto !important;
-    margin-right: auto !important;
-}
+/* Removed .stButton rules that were breaking layout */
 
 /* ============================================
    VISIONOS GLASSMORPHIC INPUT FIELDS

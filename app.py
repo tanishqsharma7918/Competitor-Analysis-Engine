@@ -138,21 +138,18 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# GLASS CONTAINER WRAPS EVERYTHING:
-with st.container():
-    st.markdown("""
-    <div class='glass-container' style='padding: 32px;'>
-    """, unsafe_allow_html=True)
+# GLASS CONTAINER (REAL one)
+st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
 
-    # FORM INPUTS
+with st.form("product_form"):   # <<<< THE FIX: Streamlit wraps correctly
     col1, col2 = st.columns(2)
 
     with col1:
         product_name = st.text_input(
-            "Product Name *", 
+            "Product Name *",
             placeholder="Slack, Notion, Salesforce"
         )
-    
+
     with col2:
         company_name = st.text_input(
             "Company Name (Optional)",
@@ -161,27 +158,29 @@ with st.container():
 
     product_description = st.text_area(
         "Product Description (Optional)",
-        placeholder="Describe your product..."
+        placeholder="Describe your product…",
+        height=120
     )
 
-    # BUTTON — NOW CENTERED NATURALLY
-    st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
-    analyze_button = st.button("🚀 Analyze Competitors")
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Center button inside form
+    submitted = st.form_submit_button(
+        "🚀 Analyze Competitors",
+        use_container_width=True
+    )
 
-    # Optional: clear button
-    if st.session_state.analysis_complete:
-        st.markdown("<div style='text-align:center;'>", unsafe_allow_html=True)
-        clear_button = st.button("🔄 Clear Results")
-        st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
-        if clear_button:
-            st.session_state.analysis_complete = False
-            st.session_state.results = {}
-            st.session_state.logger = None
-            st.rerun()
+# Handle clear results button (outside form)
+if st.session_state.analysis_complete:
+    clear_button = st.button("🔄 Clear Results")
+    if clear_button:
+        st.session_state.analysis_complete = False
+        st.session_state.results = {}
+        st.session_state.logger = None
+        st.rerun()
 
-    st.markdown("</div>", unsafe_allow_html=True)
+# Store form values
+analyze_button = submitted
 
 
 # -------------------------------------------------------
