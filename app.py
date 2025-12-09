@@ -132,9 +132,10 @@ st.markdown("""
 <div class='content-wrapper'>
     <h3 style='font-size: 24px; font-weight: 600; color: #1d1d1f; margin-bottom: 8px; text-align: center;'>📝 Product Information</h3>
     <p style='font-size: 16px; color: #6e6e73; margin-bottom: 32px; text-align: center;'>Enter your product details to begin competitive analysis</p>
-    <div class='glass-container'>
 </div>
 """, unsafe_allow_html=True)
+
+st.markdown("<div class='glass-container'>", unsafe_allow_html=True)
 
 col1, col2 = st.columns(2, gap="large")
 with col1:
@@ -171,8 +172,8 @@ if st.session_state.analysis_complete:
         st.session_state.logger = None
         st.rerun()
 
-# Close glass-container and content-wrapper
-st.markdown("</div></div>", unsafe_allow_html=True)
+# Close glass-container
+st.markdown("</div>", unsafe_allow_html=True)
 
 
 # -------------------------------------------------------
