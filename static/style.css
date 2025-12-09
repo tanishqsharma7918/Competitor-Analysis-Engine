@@ -641,25 +641,7 @@ p {
     transform: translateY(0) scale(1) !important;
 }
 
-/* Form Submit Button Styling */
-button[kind="formSubmit"] {
-    background: #2ECC71 !important;
-    color: white !important;
-    border: none !important;
-    padding: 14px 28px !important;
-    font-size: 18px !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
-    transition: all 0.2s ease-in-out !important;
-}
-
-button[kind="formSubmit"]:hover {
-    background: #27AE60 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.20) !important;
-}
+/* Form Submit Button - Removed (will be added at bottom) */
 
 /* Form Submit Button */
 .stForm button[type="submit"] {
@@ -911,4 +893,27 @@ button[kind="formSubmit"]:hover {
         font-size: 14px;
         padding: 10px 16px;
     }
+}
+
+/* FIX FOR FORM SUBMIT BUTTON */
+button[kind="formSubmit"] {
+    background: #22C55E !important;   /* Green */
+    color: white !important;
+    border: none !important;
+    padding: 14px 32px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    cursor: pointer !important;
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35) !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    transition: 0.2s ease !important;
+}
+
+button[kind="formSubmit"]:hover {
+    background: #16A34A !important; /* darker green */
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(34, 197, 94, 0.45) !important;
 }
