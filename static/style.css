@@ -66,34 +66,29 @@
 }
 
 /* ============================================
-   GRADIENT BACKGROUND - FIXED VIEWPORT
+   BACKGROUND - SILVER-GREY
    ============================================ */
 
-/* HTML & Body - Full Gradient */
+/* HTML & Body - Smooth Silver-Grey */
 html {
-    background: linear-gradient(135deg, 
-        var(--gradient-start) 0%, 
-        var(--gradient-mid) 50%, 
-        var(--gradient-end) 100%
-    ) fixed;
-    background-size: cover;
+    background: #F2F4F7 !important;
     min-height: 100vh;
 }
 
 body {
-    background: transparent !important;
+    background: #F2F4F7 !important;
     font-family: 'SF Pro Display', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
 }
 
-/* Streamlit Main Container - Transparent */
+/* Streamlit Main Container - Silver-Grey */
 .main {
-    background: transparent !important;
+    background: #F2F4F7 !important;
 }
 
 [data-testid="stAppViewContainer"] {
-    background: transparent !important;
+    background: #F2F4F7 !important;
 }
 
 /* ============================================
